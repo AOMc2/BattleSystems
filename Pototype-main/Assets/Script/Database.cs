@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Database : MonoBehaviour
 {
-    public static bool isHandling = false, isAttack = false, isSkill = false, isItem = false;
+    public static bool isHandling = false, isAttack = false, isSkill = false, isItem = false, isSelectAlly = false;
+    public static int selectedTargetIndex = 0;
     public GameObject c, s;
     public GameObject[] characterSprites;
     public List<GameObject> allyDetails;

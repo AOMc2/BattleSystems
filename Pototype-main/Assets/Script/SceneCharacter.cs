@@ -72,9 +72,11 @@ public class SceneCharacter : MonoBehaviour
                                 Database.isAttack = false;
                                 Database.isSkill = false;
                                 Database.isItem = false;
+                                Database.isSelectAlly = false;
                                 database.battleOptions.transform.GetChild(0).gameObject.SetActive(true);
                                 database.battleOptions.transform.GetChild(1).gameObject.SetActive(true);
                                 database.battleOptions.transform.GetChild(2).gameObject.SetActive(true);
+                                database.battleOptions.transform.GetChild(3).gameObject.SetActive(true);
                                 StartCoroutine("WaitOption");
                             }
                             else
