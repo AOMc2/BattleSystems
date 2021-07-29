@@ -14,10 +14,10 @@ public class SceneCharacter : MonoBehaviour
     private int standingPosition = 0;
     private float progress = 0;
     private GameObject sceneCharacter;
+    private BattleMenu battleMenu;
     private static int speedBarLength = 16;
     private int repeatRate = 0;
     private Shader shaderGUIText, shaderSpriteDefault;
-
 
     private void Start()
     {
@@ -43,6 +43,7 @@ public class SceneCharacter : MonoBehaviour
             transform.localScale = new Vector2(0.4f, 0.4f);
             animator = transform.GetChild(0).GetComponent<Animator>();
             myRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+            battleMenu = GameObject.Find("BattleMenu").GetComponent<BattleMenu>();
             parent = transform.parent.GetComponent<SceneCharacter>();
         }
         shaderGUIText = Shader.Find("GUI/Text Shader");
@@ -51,7 +52,7 @@ public class SceneCharacter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Database.isHandling == false)
+        if (database.isHandling == false)
         {
             if (isBarCharacter == true)
             {
@@ -64,24 +65,16 @@ public class SceneCharacter : MonoBehaviour
                     }
                     else if (progress >= speedBarLength)
                     {
-                        if (Database.isHandling == false)
+                        if (database.isHandling == false)
                         {
-                            Database.isHandling = true;
+                            database.isHandling = true;
                             if (characterStats.isAlly == true)
                             {
-                                Database.isAttack = false;
-                                Database.isSkill = false;
-                                Database.isItem = false;
-                                Database.isSelectAlly = false;
-                                database.battleOptions.transform.GetChild(0).gameObject.SetActive(true);
-                                database.battleOptions.transform.GetChild(1).gameObject.SetActive(true);
-                                database.battleOptions.transform.GetChild(2).gameObject.SetActive(true);
-                                database.battleOptions.transform.GetChild(3).gameObject.SetActive(true);
                                 StartCoroutine("WaitOption");
                             }
                             else
                             {
-                                castSkill(characterStats.ID, getSkillID(characterStats.ID, repeatRate), true, 0);
+                                performAttackPattern(characterStats.ID, getAttackID(characterStats.ID, repeatRate), 0, true);
                                 StartCoroutine("playAnimation");
                             }
                         }
@@ -115,6 +108,14 @@ public class SceneCharacter : MonoBehaviour
 
                 if (characterStats.currentHP <= 0 && characterStats.isDead == false)
                 {
+                    if (characterStats.specialEffects.Count > 0)
+                    {
+                        for(int i = 0; i< characterStats.specialEffects.Count; i++)
+                        {
+                            Destroy(characterStats.specialEffects[i]);
+                        }
+                        characterStats.specialEffects.Clear();
+                    }
                     if (characterStats.isAlly == true)
                     {
                         database.allyDetails.Remove(characterStats.gameObject);
@@ -126,7 +127,7 @@ public class SceneCharacter : MonoBehaviour
                         int deathNumber = 0;
                         for (int i = 0; i < database.allyDetails.Count; i++)
                         {
-                            if (database.allyDetails[i].GetComponent<Character>().isDead == true)
+                            if(database.allyDetails[i].GetComponent<Character>().isDead == true)
                             {
                                 deathNumber++;
                             }
@@ -136,7 +137,28 @@ public class SceneCharacter : MonoBehaviour
                             Debug.Log("All Allies Died.");
                         }
                     }
+                    else
+                    {
+                        database.enemyDetails.Remove(characterStats.gameObject);
+                        database.enemyDetails.Add(characterStats.gameObject);
+                        characterStats.isDead = true;
+                        myRenderer.material.shader = shaderGUIText;
+                        myRenderer.color = Color.grey;
 
+                        int deathNumber = 0;
+                        for (int i = 0; i < database.enemyDetails.Count; i++)
+                        {
+                            if (database.enemyDetails[i].GetComponent<Character>().isDead == true)
+                            {
+                                deathNumber++;
+                            }
+                        }
+                        if (deathNumber == database.enemyDetails.Count)
+                        {
+                            Debug.Log("All Enemies Died.");
+                        }
+                    }
+                    
                 }
             }
         }
@@ -152,8 +174,16 @@ public class SceneCharacter : MonoBehaviour
         myRenderer.material.shader = shaderGUIText;
         myRenderer.color = Color.red;
         yield return new WaitForSeconds(0.2f);
-        myRenderer.material.shader = shaderSpriteDefault;
-        myRenderer.color = Color.white;
+        if (characterStats.isDead == true)
+        {
+            myRenderer.material.shader = shaderGUIText;
+            myRenderer.color = Color.grey;
+        }
+        else
+        {
+            myRenderer.material.shader = shaderSpriteDefault;
+            myRenderer.color = Color.white;
+        }
     }
 
     IEnumerator playAnimation()
@@ -161,14 +191,32 @@ public class SceneCharacter : MonoBehaviour
         parent.animator.SetBool("isAttack", true);
         animator.SetBool("isAttack", true);
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).speed);
+        if (characterStats.specialEffects.Count != 0)
+        {
+            for (int i = 0; i < characterStats.specialEffects.Count; i++)
+            {
+                ElementEffect temp = characterStats.specialEffects[i].GetComponent<ElementEffect>();
+                temp.roundRemainings--;
+                if (temp.roundRemainings <= 0)
+                {
+                    characterStats.specialEffects.Remove(characterStats.specialEffects[i]);
+                    Destroy(temp.gameObject);
+                    for (int j = i; j < characterStats.specialEffects.Count; j++)
+                    {
+                        characterStats.specialEffects[j].transform.position += new Vector3(0, -1, 0);
+                    }
+                }
+            }
+        }
         repeatRate++;
         parent.animator.SetBool("isAttack", false);
         animator.SetBool("isAttack", false);
-        Database.isHandling = false;
+        database.isHandling = false;
         progress = 0;
     }
 
-    private int getSkillID(int ID, int repeatRate)
+    // For Enemy Only
+    private int getAttackID(int ID, int repeatRate)
     {
         int maxSkillPattern = 0;
         switch (ID)
@@ -176,37 +224,72 @@ public class SceneCharacter : MonoBehaviour
             case 0:
                 maxSkillPattern = 1;
                 break;
+            default:
+                maxSkillPattern = -1;
+                break;
+        }
+        if (maxSkillPattern == -1)
+        {
+            return -1;
         }
         return repeatRate % maxSkillPattern;
     }
 
-    private Character getCharacterItem(bool isAlly, int index)
+    private Character getTarget(int index, bool isAlly)
     {
-        if (isAlly == true)
+        if (isAlly)
         {
             return database.allyDetails[index].GetComponent<Character>();
         }
-        return database.enemyDetails[index].GetComponent<Character>();
+        else
+        {
+            return database.enemyDetails[index].GetComponent<Character>();
+        }
     }
 
-    private void castSkill(int ID, int skillID, bool isAllySide, int index)
+    // For Enemy Only, AttackID Sets To -1 = Basic Attack
+    private void performAttackPattern(int ID, int attackID, int index, bool isAlly)
     {
-        Character target = getCharacterItem(isAllySide, index);
-        switch (ID)
+        Character target = getTarget(index, isAlly);
+        if (attackID == -1)
         {
-            case 0:
-                if (skillID == 0)
-                {
-                    target.currentHP -= characterStats.attackDamage;
-                }
-                break;
+            target.currentHP -= characterStats.attackDamage;
         }
+        else
+        {
+            switch (ID)
+            {
+                case 0:
+                    if (attackID == 0)
+                    {
+                        target.currentHP -= characterStats.attackDamage;
+                    }
+                    break;
+            }
+        }
+        target.AddElementEffect(2, target, characterStats.element);
         target.sceneCharacter.isHit();
     }
 
     IEnumerator WaitOption()
     {
-        yield return new WaitUntil(() => Database.isAttack == true || Database.isSkill == true || Database.isItem == true);
+        database.isSelectedOption = false;
+        database.selector = database.allyDetails.IndexOf(characterStats.gameObject);
+        battleMenu.Show();
+        yield return new WaitUntil(() => database.isSelectedOption == true);
+        database.isSelectedOption = false;
+        switch (database.selectedState)
+        {
+            case 0:
+                performAttackPattern(0, -1, database.selectedIndex, false);
+                break;
+            case 1:
+                Debug.Log("Caster: " + database.selector + ", Skill: " + database.allyDetails[database.selector].GetComponent<Character>().skills[database.selectedItem].skillName + ", Is Ally Side: " + database.isAllySelected + ", Target Index: " + database.selectedIndex);
+                break;
+            case 2:
+                Debug.Log("Caster: " + database.selector + ", Item: " + database.inventory[database.selectedItem].itemName + ", Is Ally Side: " + database.isAllySelected + ", Target Index: " + database.selectedIndex);
+                break;
+        }
         StartCoroutine("playAnimation");
     }
 }

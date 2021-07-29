@@ -53,3 +53,19 @@ MonoBehaviour:
   attackDamage: 0
   ID: 0
   element: 0
+  isAlly: 0
+  isDead: 0
+  sceneCharacter: {fileID: 0}
+  skills: []
+  elementImages:
+  - {fileID: 21300004, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300006, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300008, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300010, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300012, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300014, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300016, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  - {fileID: 21300000, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
+  specialEffects: []
+  elementEffectImage: {fileID: 6347500698656017869, guid: ed5ceb1505e92c242a3aadf5a3656d23,
+    type: 3}
