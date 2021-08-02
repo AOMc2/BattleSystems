@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Database : MonoBehaviour
 {
-    public bool isHandling = false, isSelectedOption = false, isAllySelected = false;
-    public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0;
+    public bool isHandling = true, isSelectedOption = false, isAllySelected = false;
+    public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0, currentWave = 0, mapLerpingNumber = 0, totalWave = 0, level = 0;
     public GameObject c, s, i, m;
     public GameObject[] characterSprites;
-    public List<GameObject> allyDetails;
-    public List<GameObject> enemyDetails;
+    public List<GameObject> allyDetails, enemyDetails;
+    public List<Character> waitingEnemies;
     public List<Item> inventory;
     public Sprite[] backgroundMap, foregroundMap;
     public MoveForeground moveMap;
@@ -24,12 +24,13 @@ public class Database : MonoBehaviour
         allyDetails.Add(cloner);
     }
 
-    public void AddCharacterToEnemyList(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Character.Element element, int ID)
+    public void AddCharacterToEnemyList(Character characterStats)
     {
         GameObject cloner = Instantiate(c);
-        cloner.GetComponent<Character>().SetCharacter(maxHP, maxMP, defense, dodgeRate, speed, attackDamage, element, ID);
-        cloner.GetComponent<Character>().isAlly = false;
-        cloner.name = ID.ToString();
+        cloner.GetComponent<Character>().SetCharacter(characterStats.maxHP, characterStats.maxMP, characterStats.defense, characterStats.dodgeRate, characterStats.speed, characterStats.attackDamage, characterStats.element, characterStats.ID, characterStats.wave);
+        Character tempCharacter = cloner.GetComponent<Character>();
+        tempCharacter.isAlly = false;
+        cloner.name = characterStats.ID.ToString();
         cloner.transform.SetParent(transform);
         enemyDetails.Add(cloner);
     }
@@ -50,6 +51,24 @@ public class Database : MonoBehaviour
 
     public void CreateEnemy()
     {
+        int t = 0;
+        for (int i = 0; i < waitingEnemies.Count; i++)
+        {
+            if (waitingEnemies[i].wave == currentWave)
+            {
+                AddCharacterToEnemyList(waitingEnemies[i]);
+                t++;
+            }
+        }
+
+        for (int i = 0; i < waitingEnemies.Count; i++)
+        {
+            if (t > 0)
+            {
+                waitingEnemies.RemoveAt(t - 1);
+            }
+            t--;
+        }
         for (int i = 0; i < enemyDetails.Count; i++)
         {
             GameObject cloner = Instantiate(s, new Vector2(2 + i * 2, -2), Quaternion.identity);
@@ -60,13 +79,14 @@ public class Database : MonoBehaviour
             enemyDetails[i].GetComponent<Character>().sceneCharacter = temp;
             cloner.tag = "Enemy";
         }
+        isHandling = false;
     }
 
     public void AddItemToInventory(string name, int amount)
     {
         bool isExist = false;
         int existingIndex = 0;
-        for(int i = 0; i < inventory.Count; i++)
+        for (int i = 0; i < inventory.Count; i++)
         {
             if (name == inventory[i].itemName)
             {
@@ -101,6 +121,12 @@ public class Database : MonoBehaviour
         tempForeground.transform.localScale = new Vector3(1, 1, 0);
         moveMap = tempForeground.GetComponent<MoveForeground>();
         moveMap.isForeground = true;
+        moveMap.database = this;
+    }
+
+    public void AddEnemyDetailsToWaitingEnemies(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Character.Element element, int ID, int wave)
+    {
+        waitingEnemies.Add(new Character(maxHP, maxMP, defense, dodgeRate, speed, attackDamage, element, ID, wave));
     }
 
     private void Start()
@@ -113,12 +139,19 @@ public class Database : MonoBehaviour
         allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Fireball"));
         allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Explosion"));
 
+        switch (level)
+        {
+            case 0:
+                totalWave = 3;
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 6, 15, Character.Element.water, 0, 1);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 6, 15, Character.Element.water, 0, 2);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 2);
+                break;
+        }
 
-        AddCharacterToEnemyList(50, 100, 10, 5, 5, 15, Character.Element.fire, 0);
-        AddCharacterToEnemyList(50, 100, 10, 5, 6, 15, Character.Element.water, 0);
-        AddCharacterToEnemyList(50, 100, 10, 5, 7, 15, Character.Element.earth, 0);
-
-        CreateMap(0);
+        CreateMap(1);
         CreateAlly();
         CreateEnemy();
 

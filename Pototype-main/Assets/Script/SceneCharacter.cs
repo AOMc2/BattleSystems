@@ -37,6 +37,7 @@ public class SceneCharacter : MonoBehaviour
             HPIndicatorHolder = Instantiate(characterStats.textPrefab).GetComponent<TMPro.TextMeshProUGUI>();
             HPIndicatorHolder.transform.position = transform.position;
             HPIndicatorHolder.transform.position += new Vector3(1, -1.6f, 0);
+            HPIndicatorHolder.color = Color.black;
             HPIndicatorHolder.transform.SetParent(GameObject.Find("Canvas").transform);
             if (characterStats.isAlly == true)
             {
@@ -145,6 +146,7 @@ public class SceneCharacter : MonoBehaviour
                         if (deathNumber == database.allyDetails.Count)
                         {
                             Debug.Log("All Allies Died.");
+                            database.isHandling = true;
                         }
                     }
                     else
@@ -170,8 +172,28 @@ public class SceneCharacter : MonoBehaviour
                         }
                         if (deathNumber == database.enemyDetails.Count)
                         {
-                            Debug.Log("All Enemies Died.");
-                            if (database.moveMap.isCalled == false)
+                            database.isHandling = true;
+                            for (int i = 0; i < database.enemyDetails.Count; i++)
+                            {
+                                if (database.enemyDetails[i] != gameObject)
+                                {
+                                    Destroy(database.enemyDetails[i].GetComponent<Character>().sceneCharacter.HPIndicatorHolder.gameObject);
+                                    Destroy(database.enemyDetails[i].GetComponent<Character>().sceneCharacter.gameObject);
+                                    Destroy(database.enemyDetails[i]);
+                                }
+                            }
+                            for (int i = 0; i < database.allyDetails.Count; i++)
+                            {
+                                database.allyDetails[i].GetComponent<Character>().sceneCharacter.barCharacter.progress = 0;
+                            }
+                            database.enemyDetails.Clear();
+                            Destroy(HPIndicatorHolder.gameObject);
+                            Destroy(characterStats.sceneCharacter.gameObject);
+                            if (database.currentWave + 1 == database.totalWave)
+                            {
+                                Debug.Log("Level Completed.");
+                            }
+                            else
                             {
                                 database.moveMap.StartLerping();
                             }

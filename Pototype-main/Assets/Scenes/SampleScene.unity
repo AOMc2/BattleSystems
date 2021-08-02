@@ -219,7 +219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 492979416}
-  - component: {fileID: 492979415}
+  - component: {fileID: 492979414}
   m_Layer: 0
   m_Name: Database
   m_TagString: Untagged
@@ -227,7 +227,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &492979415
+--- !u!114 &492979414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,6 +246,10 @@ MonoBehaviour:
   selectedIndex: 0
   selector: 0
   selectedItem: 0
+  currentWave: 0
+  mapLerpingNumber: 0
+  totalWave: 0
+  level: 0
   c: {fileID: 7154170433563052892, guid: 19172f2cf30900e46afc06c581420a54, type: 3}
   s: {fileID: 7230940492055697700, guid: 313d2559ea623c84e9da27501d7510fb, type: 3}
   i: {fileID: 7752918848809766395, guid: d114612f10da5d549b06ea6687b115f5, type: 3}
@@ -254,11 +258,15 @@ MonoBehaviour:
   - {fileID: 7146561053583597744, guid: e269368df50279246ab6d82705bc6e0b, type: 3}
   allyDetails: []
   enemyDetails: []
+  waitingEnemies: []
   inventory: []
   backgroundMap:
   - {fileID: 21300000, guid: e3f6357594de889439e927a18db84a53, type: 3}
+  - {fileID: 21300000, guid: 1867b141c5d8a3e4da3ae250c659edb0, type: 3}
   foregroundMap:
   - {fileID: 21300000, guid: 3992b7dab26cb464491432d2eb7f3db7, type: 3}
+  - {fileID: 21300000, guid: 86dfd944506ad9a4d945b3ea70735bce, type: 3}
+  moveMap: {fileID: 0}
 --- !u!4 &492979416
 Transform:
   m_ObjectHideFlags: 0

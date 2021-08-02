@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public int maxHP, currentHP, maxMP, currentMP, defense, dodgeRate, speed, attackDamage, ID;
+    public int maxHP, currentHP, maxMP, currentMP, defense, dodgeRate, speed, attackDamage, ID, wave;
     public int extraDefense, extraDodgeRate, extraSpeed, extraAttackDamage, shieldPoint;
     public enum Element {none, fire, water, wind, earth, electricity, ice, rain, stone, wildfire, chaos};
     public Element element;
@@ -16,7 +16,7 @@ public class Character : MonoBehaviour
     public GameObject textPrefab;
     public List<StatsEffect> statsEffects;
 
-    public void SetCharacter(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Element element, int ID)
+    public Character(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Element element, int ID, int wave)
     {
         this.maxHP = maxHP;
         currentHP = maxHP;
@@ -28,6 +28,22 @@ public class Character : MonoBehaviour
         this.attackDamage = attackDamage;
         this.element = element;
         this.ID = ID;
+        this.wave = wave;
+    }
+
+    public void SetCharacter(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Element element, int ID, int wave = 0)
+    {
+        this.maxHP = maxHP;
+        currentHP = maxHP;
+        this.maxMP = maxMP;
+        currentMP = 0;
+        this.defense = defense;
+        this.dodgeRate = dodgeRate;
+        this.speed = speed;
+        this.attackDamage = attackDamage;
+        this.element = element;
+        this.ID = ID;
+        this.wave = wave;
     }
 
     public void AddSkill(Skill skill)

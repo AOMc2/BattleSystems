@@ -236,24 +236,35 @@ public class ElementEffect : MonoBehaviour
     {
         if (isDeleted == false)
         {
-            transform.position = characterStats.sceneCharacter.transform.position;
-            transform.position += new Vector3(1, characterStats.effects.IndexOf(gameObject), 0);
-            if (roundIndicatorHolder != null)
+            if (characterStats.sceneCharacter != null)
             {
-                roundIndicatorHolder.transform.position = transform.position;
-                roundIndicatorHolder.transform.position += new Vector3(0.35f, -0.2f, 0);
-            }
-            if (round <= 0 || characterStats.isDead == true)
-            {
+                transform.position = characterStats.sceneCharacter.transform.position;
+                transform.position += new Vector3(1, characterStats.effects.IndexOf(gameObject), 0);
+                if (roundIndicatorHolder != null)
+                {
+                    roundIndicatorHolder.transform.position = transform.position;
+                    roundIndicatorHolder.transform.position += new Vector3(0.35f, -0.2f, 0);
+                }
+                if (round <= 0 || characterStats.isDead == true)
+                {
                     isDeleted = true;
                     StartCoroutine("SlideDelete");
+                }
+                if (previousRepeatRate != characterStats.sceneCharacter.barCharacter.repeatRate)
+                {
+                    round--;
+                    roundIndicatorHolder.text = round.ToString();
+                    previousRepeatRate = characterStats.sceneCharacter.barCharacter.repeatRate;
+                    executeEffects();
+                }
             }
-            if (previousRepeatRate != characterStats.sceneCharacter.barCharacter.repeatRate)
+            else
             {
-                round--;
-                roundIndicatorHolder.text = round.ToString();
-                previousRepeatRate = characterStats.sceneCharacter.barCharacter.repeatRate;
-                executeEffects();
+                if (isDeleted == false)
+                {
+                    isDeleted = true;
+                    StartCoroutine("SlideDelete");
+                }
             }
         }
     }

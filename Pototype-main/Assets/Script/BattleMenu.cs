@@ -45,6 +45,12 @@ public class BattleMenu : MonoBehaviour
         sr.enabled = false;
         isShowing = false;
         Destroy(instructionHolder.gameObject);
+        Destroy(targetIconHolder);
+        database.isAllySelected = isTargetAlly;
+        database.selectedIndex = currentTarget;
+        database.selectedState = currentOption - 1;
+        database.selectedItem = currentItem;
+        database.isSelectedOption = true;
     }
 
     private void Update()
@@ -132,7 +138,7 @@ public class BattleMenu : MonoBehaviour
 
     private void CreateTargetIcon()
     {
-        if (hasTargetIconCreated == false)
+        if (hasTargetIconCreated == false && database.enemyDetails.Count > 0)
         {
             instructionHolder.text = "[A], [Left] and [D], [Right] to change selection, [Z] to comfirm, [X] to cancel";
             hasTargetIconCreated = true;
@@ -248,12 +254,6 @@ public class BattleMenu : MonoBehaviour
         else
         {
             Hide();
-            Destroy(targetIconHolder);
-            database.isAllySelected = isTargetAlly;
-            database.selectedIndex = currentTarget;
-            database.selectedState = currentOption - 1;
-            database.selectedItem = currentItem;
-            database.isSelectedOption = true;
         }
     }
 

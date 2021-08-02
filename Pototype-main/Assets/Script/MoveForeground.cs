@@ -5,8 +5,8 @@ using UnityEngine;
 public class MoveForeground : MonoBehaviour
 {
     private bool shouldLerp = false;
-    public bool isForeground = false, isCalled = false;
-
+    public bool isForeground = false;
+    public Database database;
     public int mapID = 0;
     private float timeStartedLerping, lerpTime = 1.75f;
 
@@ -16,12 +16,12 @@ public class MoveForeground : MonoBehaviour
     public void StartLerping()
     {
         enabled = true;
-        isCalled = true;
         timeStartedLerping = Time.time;
 
-        shouldLerp = true;
-        if (mapID != 2)
+        if (database.mapLerpingNumber < 3)
         {
+            database.mapLerpingNumber++;
+            shouldLerp = true;
             nextMap.StartLerping();
         }
     }
@@ -42,6 +42,7 @@ public class MoveForeground : MonoBehaviour
         startPosition = new Vector2(-4.5f + mapID * 12.7f, 0);
         endPosition = new Vector2(startPosition.x - 12.7f, 0);
         transform.position = startPosition;
+        transform.name = "Foreground" + mapID;
     }
 
     private void Start()
@@ -57,6 +58,7 @@ public class MoveForeground : MonoBehaviour
             {
                 nextMap = Instantiate(gameObject).GetComponent<MoveForeground>();
                 nextMap.mapID = mapID + 1;
+                nextMap.firstMap = firstMap;
             }
             else
             {
@@ -74,13 +76,19 @@ public class MoveForeground : MonoBehaviour
             if ((Vector2)transform.position == endPosition)
             {
                 enabled = false;
-                isCalled = false;
                 mapID--;
                 if (mapID < 0)
                 {
                     mapID = 2;
                 }
                 setMapPosition(mapID);
+
+                if (mapID == 0)
+                {
+                    database.currentWave++;
+                    database.CreateEnemy();
+                    database.mapLerpingNumber = 0;
+                }
             }
         }
     }
