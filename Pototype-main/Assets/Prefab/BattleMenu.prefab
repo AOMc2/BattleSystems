@@ -103,8 +103,6 @@ MonoBehaviour:
     type: 3}
   itemMenu: {fileID: 3424124648451317466, guid: 7ab00e1ecafff7c42abb763ace3b9a28,
     type: 3}
-  instruction: {fileID: 4338799485246985098, guid: b6ff48ce989462b4aa8cecfef7c3def9,
-    type: 3}
   database: {fileID: 0}
   isShowing: 0
   isSelectedOption: 0

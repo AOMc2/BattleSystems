@@ -8,30 +8,45 @@ public class SceneCharacter : MonoBehaviour
     public Character characterStats;
     public Database database;
     public Animator animator;
-    public SceneCharacter parent;
+    public SceneCharacter sceneCharacter, barCharacter;
     public SpriteRenderer myRenderer;
+    public int repeatRate = 0;
+    public float progress = 0;
 
-    private int standingPosition = 0;
-    private float progress = 0;
-    private GameObject sceneCharacter;
     private BattleMenu battleMenu;
     private static int speedBarLength = 16;
-    private int repeatRate = 0;
     private Shader shaderGUIText, shaderSpriteDefault;
+    private TMPro.TextMeshProUGUI HPIndicatorHolder;
 
     private void Start()
     {
         if (isBarCharacter == false)
         {
-            sceneCharacter = Instantiate(database.characterSprites[characterStats.ID], transform.position, Quaternion.identity);
-            sceneCharacter.transform.SetParent(transform);
-            animator = sceneCharacter.GetComponent<Animator>();
-            myRenderer = sceneCharacter.GetComponent<SpriteRenderer>();
+            GameObject cloner1 = Instantiate(database.characterSprites[characterStats.ID], transform.position, Quaternion.identity);
+            cloner1.transform.SetParent(transform);
+            animator = cloner1.GetComponent<Animator>();
+            myRenderer = cloner1.GetComponent<SpriteRenderer>();
+            myRenderer.sortingLayerName = "character";
 
-            GameObject cloner = Instantiate(gameObject);
-            cloner.GetComponent<SceneCharacter>().isBarCharacter = true;
-            cloner.name = "barIcon";
-            cloner.transform.SetParent(transform);
+            GameObject cloner2 = Instantiate(gameObject);
+            barCharacter = cloner2.GetComponent<SceneCharacter>();
+            barCharacter.isBarCharacter = true;
+            barCharacter.name = "barIcon";
+            barCharacter.transform.SetParent(transform);
+
+            HPIndicatorHolder = Instantiate(characterStats.textPrefab).GetComponent<TMPro.TextMeshProUGUI>();
+            HPIndicatorHolder.transform.position = transform.position;
+            HPIndicatorHolder.transform.position += new Vector3(1, -1.6f, 0);
+            HPIndicatorHolder.transform.SetParent(GameObject.Find("Canvas").transform);
+            if (characterStats.isAlly == true)
+            {
+                HPIndicatorHolder.text = "HP" + characterStats.currentHP + "\nMP" + characterStats.currentMP;
+            }
+            else
+            {
+                HPIndicatorHolder.text = "HP" + characterStats.currentHP;
+            }
+            HPIndicatorHolder.fontSize = 0.2f;
             if (tag == "Enemy")
             {
                 transform.rotation = Quaternion.Euler(0, -180, 0);
@@ -43,8 +58,9 @@ public class SceneCharacter : MonoBehaviour
             transform.localScale = new Vector2(0.4f, 0.4f);
             animator = transform.GetChild(0).GetComponent<Animator>();
             myRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+            myRenderer.sortingLayerName = "character";
             battleMenu = GameObject.Find("BattleMenu").GetComponent<BattleMenu>();
-            parent = transform.parent.GetComponent<SceneCharacter>();
+            sceneCharacter = transform.parent.GetComponent<SceneCharacter>();
         }
         shaderGUIText = Shader.Find("GUI/Text Shader");
         shaderSpriteDefault = Shader.Find("Sprites/Default");
@@ -75,14 +91,21 @@ public class SceneCharacter : MonoBehaviour
                             else
                             {
                                 performAttackPattern(characterStats.ID, getAttackID(characterStats.ID, repeatRate), 0, true);
-                                StartCoroutine("playAnimation");
+                                StartCoroutine("attack");
                             }
                         }
                     }
                     else
                     {
-                        progress += characterStats.speed * Time.deltaTime;
-                        transform.position = new Vector2(-8 + progress, 4);
+                            if (characterStats.speed + characterStats.extraSpeed > 0)
+                            {
+                                progress += (characterStats.speed + characterStats.extraSpeed) * Time.deltaTime;
+                            }
+                            else
+                            {
+                                progress += 1 * Time.deltaTime;
+                            }
+                            transform.position = new Vector2(-8 + progress, 4);
                     }
                 }
                 else
@@ -95,27 +118,9 @@ public class SceneCharacter : MonoBehaviour
             }
             else
             {
-                if (characterStats.isAlly == true)
-                {
-                    standingPosition = database.allyDetails.IndexOf(characterStats.gameObject);
-                    transform.position = new Vector2(-2 + standingPosition * -2, -2);
-                }
-                else
-                {
-                    standingPosition = database.enemyDetails.IndexOf(characterStats.gameObject);
-                    transform.position = new Vector2(2 + standingPosition * 2, -2);
-                }
-
                 if (characterStats.currentHP <= 0 && characterStats.isDead == false)
                 {
-                    if (characterStats.specialEffects.Count > 0)
-                    {
-                        for(int i = 0; i< characterStats.specialEffects.Count; i++)
-                        {
-                            Destroy(characterStats.specialEffects[i]);
-                        }
-                        characterStats.specialEffects.Clear();
-                    }
+                    HPIndicatorHolder.text = "Dead";
                     if (characterStats.isAlly == true)
                     {
                         database.allyDetails.Remove(characterStats.gameObject);
@@ -127,10 +132,15 @@ public class SceneCharacter : MonoBehaviour
                         int deathNumber = 0;
                         for (int i = 0; i < database.allyDetails.Count; i++)
                         {
-                            if(database.allyDetails[i].GetComponent<Character>().isDead == true)
+                            Character tempCharacter = database.allyDetails[i].GetComponent<Character>();
+                            if (tempCharacter.isDead == true)
                             {
                                 deathNumber++;
                             }
+                            tempCharacter.sceneCharacter.transform.position = new Vector2(-2 + i * -2, -2);
+                            TMPro.TextMeshProUGUI tempHPIndicator = tempCharacter.sceneCharacter.GetComponent<SceneCharacter>().HPIndicatorHolder;
+                            tempHPIndicator.transform.position = tempCharacter.sceneCharacter.transform.position;
+                            tempHPIndicator.transform.position += new Vector3(1, -1.6f, 0);
                         }
                         if (deathNumber == database.allyDetails.Count)
                         {
@@ -148,17 +158,41 @@ public class SceneCharacter : MonoBehaviour
                         int deathNumber = 0;
                         for (int i = 0; i < database.enemyDetails.Count; i++)
                         {
-                            if (database.enemyDetails[i].GetComponent<Character>().isDead == true)
+                            Character tempCharacter = database.enemyDetails[i].GetComponent<Character>();
+                            if (tempCharacter.isDead == true)
                             {
                                 deathNumber++;
                             }
+                            tempCharacter.sceneCharacter.transform.position = new Vector2(2 + i * 2, -2);
+                            TMPro.TextMeshProUGUI tempHPIndicator = tempCharacter.sceneCharacter.GetComponent<SceneCharacter>().HPIndicatorHolder;
+                            tempHPIndicator.transform.position = tempCharacter.sceneCharacter.transform.position;
+                            tempHPIndicator.transform.position += new Vector3(1, -1.6f, 0);
                         }
                         if (deathNumber == database.enemyDetails.Count)
                         {
                             Debug.Log("All Enemies Died.");
+                            if (database.moveMap.isCalled == false)
+                            {
+                                database.moveMap.StartLerping();
+                            }
                         }
                     }
-                    
+
+                }
+                else
+                {
+                    if (characterStats.isAlly == true)
+                    {
+                        HPIndicatorHolder.text = "HP" + characterStats.currentHP + "\nMP" + characterStats.currentMP;
+                    }
+                    else
+                    {
+                        HPIndicatorHolder.text = "HP" + characterStats.currentHP;
+                    }
+                    if (characterStats.currentHP <= 0)
+                    {
+                        HPIndicatorHolder.text = "Dead";
+                    }
                 }
             }
         }
@@ -186,32 +220,19 @@ public class SceneCharacter : MonoBehaviour
         }
     }
 
-    IEnumerator playAnimation()
+    IEnumerator attack()
     {
-        parent.animator.SetBool("isAttack", true);
+        sceneCharacter.animator.SetBool("isAttack", true);
         animator.SetBool("isAttack", true);
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).speed);
-        if (characterStats.specialEffects.Count != 0)
-        {
-            for (int i = 0; i < characterStats.specialEffects.Count; i++)
-            {
-                ElementEffect temp = characterStats.specialEffects[i].GetComponent<ElementEffect>();
-                temp.roundRemainings--;
-                if (temp.roundRemainings <= 0)
-                {
-                    characterStats.specialEffects.Remove(characterStats.specialEffects[i]);
-                    Destroy(temp.gameObject);
-                    for (int j = i; j < characterStats.specialEffects.Count; j++)
-                    {
-                        characterStats.specialEffects[j].transform.position += new Vector3(0, -1, 0);
-                    }
-                }
-            }
-        }
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length + 0.3f);
         repeatRate++;
-        parent.animator.SetBool("isAttack", false);
+        sceneCharacter.animator.SetBool("isAttack", false);
         animator.SetBool("isAttack", false);
         database.isHandling = false;
+        for (int i = 0; i < characterStats.statsEffects.Count; i++)
+        {
+            characterStats.statsEffects[i].FinsihOneRound();
+        }
         progress = 0;
     }
 
@@ -247,28 +268,56 @@ public class SceneCharacter : MonoBehaviour
         }
     }
 
+    private int getOverThread(int current, int addValue, int max = 9999)
+    {
+        if (current + addValue > max)
+        {
+            return max;
+        }
+        if (current + addValue <= 0)
+        {
+            return 1;
+        }
+        return current + addValue;
+    }
     // For Enemy Only, AttackID Sets To -1 = Basic Attack
     private void performAttackPattern(int ID, int attackID, int index, bool isAlly)
     {
         Character target = getTarget(index, isAlly);
-        if (attackID == -1)
+        int finalDamage = getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+        bool isDodged = false;
+
+        if (Random.Range(getOverThread(target.dodgeRate, target.extraDodgeRate, 100), 100) == getOverThread(target.dodgeRate , target.extraDodgeRate, 100))
         {
-            target.currentHP -= characterStats.attackDamage;
+            Debug.Log("Dodged");
+            isDodged = true;
         }
-        else
+        if (isDodged == false)
         {
-            switch (ID)
+            if (attackID == -1)
             {
-                case 0:
-                    if (attackID == 0)
-                    {
-                        target.currentHP -= characterStats.attackDamage;
-                    }
-                    break;
+                characterStats.currentMP += 10;
+                if (characterStats.currentMP > characterStats.maxMP)
+                {
+                    characterStats.currentMP = characterStats.maxMP;
+                }
+                target.currentHP -= finalDamage;
             }
+            else
+            {
+                switch (ID)
+                {
+                    case 0:
+                        if (attackID == 0)
+                        {
+                            target.currentHP -= finalDamage;
+                        }
+                        break;
+                }
+            }
+            target.AddEffect(2, characterStats.element);
+            target.sceneCharacter.isHit();
         }
-        target.AddElementEffect(2, target, characterStats.element);
-        target.sceneCharacter.isHit();
     }
 
     IEnumerator WaitOption()
@@ -278,18 +327,103 @@ public class SceneCharacter : MonoBehaviour
         battleMenu.Show();
         yield return new WaitUntil(() => database.isSelectedOption == true);
         database.isSelectedOption = false;
+        Character target = getTarget(database.selectedIndex, database.isAllySelected);
+        int finalDamage = 0;
         switch (database.selectedState)
         {
             case 0:
                 performAttackPattern(0, -1, database.selectedIndex, false);
                 break;
             case 1:
-                Debug.Log("Caster: " + database.selector + ", Skill: " + database.allyDetails[database.selector].GetComponent<Character>().skills[database.selectedItem].skillName + ", Is Ally Side: " + database.isAllySelected + ", Target Index: " + database.selectedIndex);
+                Debug.Log("Caster: " + database.selector + ", Skill: " + database.allyDetails[database.selector].GetComponent<Character>().skills[database.selectedItem].ID + ", Is Ally Side: " + database.isAllySelected + ", Target Index: " + database.selectedIndex);
+                switch (database.allyDetails[database.selector].GetComponent<Character>().skills[database.selectedItem].ID)
+                {
+                    case 0:
+                        target.AddStatsEffect(2, 0, 100, 0, 0);
+                        break;
+                    case 1:
+                        target.AddStatsEffect(1, 0, 0, -3, 0);
+                        target.AddEffect(2, Character.Element.wind);
+                        break;
+                    case 2:
+                        finalDamage = getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+                        finalDamage += (int)(finalDamage * 0.15f);
+                        target.currentHP -= finalDamage;
+                        target.AddEffect(2, Character.Element.fire);
+                        break;
+                    case 3:
+                        finalDamage = getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+                        finalDamage += (int)(finalDamage * 0.05f);
+                        for (int i = 0; i < database.enemyDetails.Count; i++)
+                        {
+                            database.enemyDetails[i].GetComponent<Character>().currentHP -= finalDamage;
+                            database.enemyDetails[i].GetComponent<Character>().AddEffect(2, Character.Element.fire);
+                        }
+                        break;
+                    case 4:
+                        target.currentHP = target.maxHP;
+                        break;
+                    case 5:
+                        finalDamage = getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+                        finalDamage = (int)(finalDamage * 0.7f);
+                        for (int i = 0; i < database.enemyDetails.Count; i++)
+                        {
+                            database.enemyDetails[i].GetComponent<Character>().currentHP -= finalDamage;
+                            database.enemyDetails[i].GetComponent<Character>().AddEffect(2, Character.Element.water);
+                        }
+                        break;
+                    case 6:
+                        target.shieldPoint += 50;
+                        break;
+                    case 7:
+                        for (int i = 0; i < database.allyDetails.Count; i++)
+                        {
+                            database.allyDetails[i].GetComponent<Character>().shieldPoint += 30;
+                        }
+                        break;
+                    case 8:
+                        target.currentHP -= getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+                        target.AddStatsEffect(2, 0, 0, 6, 0);
+                        target.AddEffect(2, Character.Element.electricity);
+                        break;
+                    case 9:
+                        characterStats.currentHP -= (int)(characterStats.currentHP * 0.9f);
+                        finalDamage = getOverThread(characterStats.attackDamage, characterStats.extraAttackDamage - (target.defense + target.extraDefense));
+                        finalDamage += (int)(finalDamage * 1.5f);
+                        target.AddEffect(2, Character.Element.electricity);
+                        break;
+                }
                 break;
             case 2:
                 Debug.Log("Caster: " + database.selector + ", Item: " + database.inventory[database.selectedItem].itemName + ", Is Ally Side: " + database.isAllySelected + ", Target Index: " + database.selectedIndex);
+                switch (database.inventory[database.selectedItem].ID)
+                {
+                    case 0:
+                        target.currentHP = getOverThread(target.currentHP, 50, target.maxHP);
+
+                        break;
+                    case 1:
+                        target.currentMP = getOverThread(target.currentMP, 30, target.maxHP);
+                        break;
+                    case 2:
+                        target.AddStatsEffect(3, 0, 0, 3, 0);
+                        break;
+                    case 3:
+                        target.AddStatsEffect(3, 0, 0, 0, 25);
+                        break;
+                    case 4:
+                        target.isDead = false;
+                        target.currentHP = getOverThread(target.currentHP, 50, target.maxHP);
+                        target.sceneCharacter.isHit();
+                        break;
+                }
+                database.inventory[database.selectedItem].itemAmount--;
+                if (database.inventory[database.selectedItem].itemAmount <= 0)
+                {
+                    database.inventory.RemoveAt(database.selectedItem);
+                }
                 break;
         }
-        StartCoroutine("playAnimation");
+        StartCoroutine("attack");
     }
 }

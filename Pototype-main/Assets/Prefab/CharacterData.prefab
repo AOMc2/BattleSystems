@@ -57,15 +57,8 @@ MonoBehaviour:
   isDead: 0
   sceneCharacter: {fileID: 0}
   skills: []
-  elementImages:
-  - {fileID: 21300004, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300006, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300008, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300010, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300012, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300014, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300016, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  - {fileID: 21300000, guid: 4d725942d73654448988b0a2e28a3b96, type: 3}
-  specialEffects: []
-  elementEffectImage: {fileID: 6347500698656017869, guid: ed5ceb1505e92c242a3aadf5a3656d23,
+  elementPrefab: {fileID: 1465022122346035448, guid: 1c50ca9e94717df4399ee06277649ed6,
+    type: 3}
+  effects: []
+  textPrefab: {fileID: 5663086937161206033, guid: 16df692c44b0cbf478cf09bc6fce43e3,
     type: 3}

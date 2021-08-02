@@ -5,10 +5,10 @@ using UnityEngine;
 public class BattleMenu : MonoBehaviour
 {
     public Sprite[] battleOptions;
-    public GameObject targetIcon, skillMenu, itemMenu, instruction;
+    public GameObject targetIcon, skillMenu, itemMenu;
     private char targetRange = 'e';
-    private GameObject targetIconHolder, skillMenuHolder, itemMenuHolder, instructionHolder;
-    private TMPro.TextMeshProUGUI text;
+    private GameObject targetIconHolder, skillMenuHolder, itemMenuHolder;
+    public TMPro.TextMeshProUGUI instructionHolder;
 
     public Database database;
     private SpriteRenderer sr;
@@ -20,14 +20,6 @@ public class BattleMenu : MonoBehaviour
         database = GameObject.Find("Database").GetComponent<Database>();
         sr = GetComponent<SpriteRenderer>();
         sr.enabled = false;
-    }
-
-    private void Start()
-    {
-        instructionHolder = Instantiate(instruction);
-        text = instructionHolder.GetComponent<TMPro.TextMeshProUGUI>();
-        instructionHolder.transform.SetParent(GameObject.Find("Canvas").transform);
-        text.text = "";
     }
 
     public void Show()
@@ -44,11 +36,15 @@ public class BattleMenu : MonoBehaviour
         currentOption = 0;
         currentTarget = 0;
         currentItem = 0;
+        instructionHolder = Instantiate(database.i).GetComponent<TMPro.TextMeshProUGUI>();
+        instructionHolder.transform.SetParent(GameObject.Find("Canvas").transform);
+        instructionHolder.text = "[W], [Up] and [S], [Down] to scroll, [Z] to comfirm";
     }
     public void Hide()
     {
         sr.enabled = false;
         isShowing = false;
+        Destroy(instructionHolder.gameObject);
     }
 
     private void Update()
@@ -57,7 +53,6 @@ public class BattleMenu : MonoBehaviour
         {
             if (isSelectedOption == false)
             {
-                text.text = "W/ Up and S/ Down to move, Z to comfirm.";
                 if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
                 {
                     if (currentOption - 1 > 1)
@@ -121,10 +116,6 @@ public class BattleMenu : MonoBehaviour
                             CreateTargetIcon();
                             selectTarget();
                         }
-                        else
-                        {
-                            text.text = "W/ Up and S/ Down to select, Z to comfirm, X to cancel.";
-                        }
                         break;
                     case 3://Item
                         if (isSelectedItem == true)
@@ -132,10 +123,6 @@ public class BattleMenu : MonoBehaviour
                             getItemTargetRange(currentItem);
                             CreateTargetIcon();
                             selectTarget();
-                        }
-                        else
-                        {
-                            text.text = "W/ Up and S/ Down to select, Z to comfirm, X to cancel.";
                         }
                         break;
                 }
@@ -147,6 +134,7 @@ public class BattleMenu : MonoBehaviour
     {
         if (hasTargetIconCreated == false)
         {
+            instructionHolder.text = "[A], [Left] and [D], [Right] to change selection, [Z] to comfirm, [X] to cancel";
             hasTargetIconCreated = true;
             targetIconHolder = Instantiate(targetIcon);
             targetIconHolder.GetComponent<TargetSelection>().battleMenu = this;
@@ -157,7 +145,6 @@ public class BattleMenu : MonoBehaviour
     {
         if (isSelectedTarget == false)
         {
-            text.text = "A/ Left and D/ Right to select target, Z to comfire, X to cancel.";
             if (targetRange != 's')
             {
                 if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
@@ -215,10 +202,41 @@ public class BattleMenu : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                isSelectedTarget = true;
+                if (currentOption != 3)
+                {
+                    if (isTargetAlly == true)
+                    {
+                        if (database.allyDetails[currentTarget].GetComponent<Character>().isDead == false)
+                        {
+                            isSelectedTarget = true;
+                        }
+                    }
+                    else
+                    {
+                        if (database.enemyDetails[currentTarget].GetComponent<Character>().isDead == false)
+                        {
+                            isSelectedTarget = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (database.inventory[currentItem].ID != 4)
+                    {
+                        isSelectedTarget = true;
+                    }
+                    else
+                    {
+                        if (database.allyDetails[currentTarget].GetComponent<Character>().isDead == true)
+                        {
+                            isSelectedTarget = true;
+                        }
+                    }
+                }
             }
             if (Input.GetKeyDown(KeyCode.X) && isSelectedTarget == false)
             {
+                instructionHolder.text = "[W], [Up] and [S], [Down] to scroll, [Z] to comfirm";
                 Destroy(targetIconHolder);
                 isSelectedOption = false;
                 isSelectedItem = false;

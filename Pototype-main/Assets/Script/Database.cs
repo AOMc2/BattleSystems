@@ -6,11 +6,13 @@ public class Database : MonoBehaviour
 {
     public bool isHandling = false, isSelectedOption = false, isAllySelected = false;
     public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0;
-    public GameObject c, s;
+    public GameObject c, s, i, m;
     public GameObject[] characterSprites;
     public List<GameObject> allyDetails;
     public List<GameObject> enemyDetails;
     public List<Item> inventory;
+    public Sprite[] backgroundMap, foregroundMap;
+    public MoveForeground moveMap;
 
     public void AddCharacterToAllyList(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Character.Element element, int ID)
     {
@@ -82,29 +84,48 @@ public class Database : MonoBehaviour
         }
     }
 
+    public void CreateMap(int sceneNumber)
+    {
+        GameObject tempBackground = Instantiate(m);
+        tempBackground.transform.position = new Vector3(0, 1.2f, 0);
+        SpriteRenderer backgroundSR = tempBackground.GetComponent<SpriteRenderer>();
+        backgroundSR.sprite = backgroundMap[sceneNumber];
+        backgroundSR.sortingLayerName = "background";
+        tempBackground.transform.localScale = new Vector3(1.6f, 1, 0);
+
+        GameObject tempForeground = Instantiate(m);
+        tempForeground.transform.position = new Vector3(-4.5f, 0, 0);
+        SpriteRenderer foregroundSR = tempForeground.GetComponent<SpriteRenderer>();
+        foregroundSR.sprite = foregroundMap[sceneNumber];
+        foregroundSR.sortingLayerName = "foreground";
+        tempForeground.transform.localScale = new Vector3(1, 1, 0);
+        moveMap = tempForeground.GetComponent<MoveForeground>();
+        moveMap.isForeground = true;
+    }
+
     private void Start()
     {
-        AddCharacterToAllyList(100, 100, 10, 5, 8, 15, Character.Element.fire, 0);
-        AddCharacterToAllyList(100, 100, 10, 5, 3, 15, Character.Element.water, 0);
+        AddCharacterToAllyList(50, 100, 20, 5, 8, 15, Character.Element.wildfire, 0);
+        AddCharacterToAllyList(100, 100, 10, 5, 8, 15, Character.Element.water, 0);
         AddCharacterToAllyList(100, 100, 10, 5, 4, 15, Character.Element.earth, 0);
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 0, 10, "Dodge"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 1, 10, "AgainstTheCurrent"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 2, 10, "Fireball"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 3, 10, "Explosion"));
+        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 10, "Dodge"));
+        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 10, "AgainstTheCurrent"));
+        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Fireball"));
+        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Explosion"));
 
 
-        AddCharacterToEnemyList(20, 100, 10, 5, 5, 15, Character.Element.fire, 0);
-        AddCharacterToEnemyList(100, 100, 10, 5, 6, 15, Character.Element.water, 0);
-        AddCharacterToEnemyList(100, 100, 10, 5, 7, 15, Character.Element.earth, 0);
+        AddCharacterToEnemyList(50, 100, 10, 5, 5, 15, Character.Element.fire, 0);
+        AddCharacterToEnemyList(50, 100, 10, 5, 6, 15, Character.Element.water, 0);
+        AddCharacterToEnemyList(50, 100, 10, 5, 7, 15, Character.Element.earth, 0);
 
-        //CreateMap(0);
+        CreateMap(0);
         CreateAlly();
         CreateEnemy();
 
-        AddItemToInventory("HP Potion", 5);
-        AddItemToInventory("MP Potion", 15);
+        AddItemToInventory("HP Potion", 10);
+        AddItemToInventory("MP Potion", 5);
         AddItemToInventory("Strength Potion", 10);
-        AddItemToInventory("Revive Potion", 8);
+        AddItemToInventory("Revive Potion", 10);
 
     }
 }

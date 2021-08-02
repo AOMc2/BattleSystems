@@ -104,7 +104,8 @@ MonoBehaviour:
   isDescription: 0
   description1: {fileID: 0}
   description2: {fileID: 0}
-  itemAmount: {fileID: 763001411046457780, guid: 2cbe75b1fbd510740888c2350c7fa157,
+  itemAmountPrefab: {fileID: 4389706109078260770, guid: a0678011840f09c4a936877a3475b0ce,
     type: 3}
+  itemAmountHolder: {fileID: 0}
   descriptionID: 0
   scroller: 0
