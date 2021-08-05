@@ -107,18 +107,18 @@ public class Database : MonoBehaviour
     public void CreateMap(int sceneNumber)
     {
         GameObject tempBackground = Instantiate(m);
-        tempBackground.transform.position = new Vector3(0, 1.2f, 0);
+        tempBackground.transform.position = new Vector3(0, 0, 0);
         SpriteRenderer backgroundSR = tempBackground.GetComponent<SpriteRenderer>();
         backgroundSR.sprite = backgroundMap[sceneNumber];
         backgroundSR.sortingLayerName = "background";
-        tempBackground.transform.localScale = new Vector3(1.6f, 1, 0);
+        tempBackground.transform.localScale = new Vector3(2.5f, 2.5f, 0);
 
         GameObject tempForeground = Instantiate(m);
-        tempForeground.transform.position = new Vector3(-4.5f, 0, 0);
+        tempForeground.transform.position = new Vector3(0, 0, 0);
         SpriteRenderer foregroundSR = tempForeground.GetComponent<SpriteRenderer>();
         foregroundSR.sprite = foregroundMap[sceneNumber];
         foregroundSR.sortingLayerName = "foreground";
-        tempForeground.transform.localScale = new Vector3(1, 1, 0);
+        tempForeground.transform.localScale = new Vector3(2.5f, 2.5f, 0);
         moveMap = tempForeground.GetComponent<MoveForeground>();
         moveMap.isForeground = true;
         moveMap.database = this;
@@ -151,7 +151,7 @@ public class Database : MonoBehaviour
                 break;
         }
 
-        CreateMap(1);
+        CreateMap(0);
         CreateAlly();
         CreateEnemy();
 

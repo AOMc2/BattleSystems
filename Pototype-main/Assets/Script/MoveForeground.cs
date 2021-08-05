@@ -39,8 +39,8 @@ public class MoveForeground : MonoBehaviour
 
     private void setMapPosition(int mapID)
     {
-        startPosition = new Vector2(-4.5f + mapID * 12.7f, 0);
-        endPosition = new Vector2(startPosition.x - 12.7f, 0);
+        startPosition = new Vector2(-4.5f + mapID * 23.75f, 0);
+        endPosition = new Vector2(startPosition.x - 23.75f, 0);
         transform.position = startPosition;
         transform.name = "Foreground" + mapID;
     }
