@@ -191,7 +191,9 @@ public class SceneCharacter : MonoBehaviour
                             Destroy(characterStats.sceneCharacter.gameObject);
                             if (database.currentWave + 1 == database.totalWave)
                             {
-                                Debug.Log("Level Completed.");
+                                database.currentWave = 0;
+                                database.waitingEnemies.Clear();
+                                database.transform.parent.GetComponent<CrossSceneManagement>().LoadScene("BigMap");
                             }
                             else
                             {

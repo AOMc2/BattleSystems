@@ -5,7 +5,7 @@ using UnityEngine;
 public class Database : MonoBehaviour
 {
     public bool isHandling = true, isSelectedOption = false, isAllySelected = false;
-    public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0, currentWave = 0, mapLerpingNumber = 0, totalWave = 0, level = 0;
+    public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0, currentWave = 0, mapLerpingNumber = 0, totalWave = 0, level = 0, coin = 1000;
     public GameObject c, s, i, m;
     public GameObject[] characterSprites;
     public List<GameObject> allyDetails, enemyDetails;
@@ -13,6 +13,8 @@ public class Database : MonoBehaviour
     public List<Item> inventory;
     public Sprite[] backgroundMap, foregroundMap;
     public MoveForeground moveMap;
+
+    private BattleMenu battleMenu;
 
     public void AddCharacterToAllyList(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Character.Element element, int ID)
     {
@@ -129,36 +131,60 @@ public class Database : MonoBehaviour
         waitingEnemies.Add(new Character(maxHP, maxMP, defense, dodgeRate, speed, attackDamage, element, ID, wave));
     }
 
-    private void Start()
+    public void SetUp()
     {
-        AddCharacterToAllyList(50, 100, 20, 5, 8, 15, Character.Element.wildfire, 0);
+        AddCharacterToAllyList(50, 100, 20, 5, 20, 15, Character.Element.wildfire, 0);
         AddCharacterToAllyList(100, 100, 10, 5, 8, 15, Character.Element.water, 0);
         AddCharacterToAllyList(100, 100, 10, 5, 4, 15, Character.Element.earth, 0);
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 10, "Dodge"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.wind, 10, "AgainstTheCurrent"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Fireball"));
-        allyDetails[0].GetComponent<Character>().AddSkill(new Skill(Character.Element.fire, 10, "Explosion"));
 
+        allyDetails[0].GetComponent<Character>().AddSkill(Character.Element.wind, 10, "Dodge");
+        allyDetails[0].GetComponent<Character>().AddSkill(Character.Element.wind, 10, "AgainstTheCurrent");
+        allyDetails[0].GetComponent<Character>().AddSkill(Character.Element.fire, 10, "Fireball");
+        allyDetails[0].GetComponent<Character>().AddSkill(Character.Element.fire, 10, "Explosion");
+    }
+
+    public void Initialize()
+    {
+        battleMenu = GameObject.Find("BattleMenu").GetComponent<BattleMenu>();
+        battleMenu.sr = battleMenu.GetComponent<SpriteRenderer>();
+        battleMenu.sr.enabled = false;
+        battleMenu.database = this;
+        
         switch (level)
         {
             case 0:
-                totalWave = 3;
+                totalWave = 1;
+                CreateMap(0);
                 AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
                 AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 6, 15, Character.Element.water, 0, 1);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.earth, 0, 1);
+                break;
+            case 1:
+                totalWave = 1;
+                CreateMap(1);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
                 AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
-                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 6, 15, Character.Element.water, 0, 2);
-                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 2);
+                break;
+            case 2:
+                totalWave = 1;
+                CreateMap(2);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
+                break;
+            case 3:
+                totalWave = 2;
+                CreateMap(3);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
+                break;
+            default:
+                totalWave = 1;
+                CreateMap(1);
+                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
                 break;
         }
 
-        CreateMap(0);
         CreateAlly();
         CreateEnemy();
-
-        AddItemToInventory("HP Potion", 10);
-        AddItemToInventory("MP Potion", 5);
-        AddItemToInventory("Strength Potion", 10);
-        AddItemToInventory("Revive Potion", 10);
-
     }
 }

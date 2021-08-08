@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatsEffect : MonoBehaviour
+[System.Serializable]
+public class StatsEffect
 {
     public int round, extraDefense, extraDodgeRate, extraSpeed, extraAttackDamage;
     public Character characterStats;

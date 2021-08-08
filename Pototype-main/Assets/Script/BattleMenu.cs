@@ -9,18 +9,12 @@ public class BattleMenu : MonoBehaviour
     private char targetRange = 'e';
     private GameObject targetIconHolder, skillMenuHolder, itemMenuHolder;
     public TMPro.TextMeshProUGUI instructionHolder;
-
     public Database database;
-    private SpriteRenderer sr;
+    public SpriteRenderer sr;
+
     public bool isShowing = false, isSelectedOption = false, isTargetAlly = false, isSelectedTarget = false, isSelectedItem = false, hasTargetIconCreated = false, hasTargetRangeSet = false;
     public int currentOption = 0, currentTarget = 0, currentItem = 0;
 
-    private void Awake()
-    {
-        database = GameObject.Find("Database").GetComponent<Database>();
-        sr = GetComponent<SpriteRenderer>();
-        sr.enabled = false;
-    }
 
     public void Show()
     {
@@ -96,8 +90,9 @@ public class BattleMenu : MonoBehaviour
                             break;
                         case 2:
                             skillMenuHolder = Instantiate(skillMenu);
-                            skillMenuHolder.GetComponent<SkillMenu>().battleMenu = this;
-                            skillMenuHolder.GetComponent<SkillMenu>().isDescription = false;
+                            SkillMenu tempSkillMenu = skillMenuHolder.GetComponent<SkillMenu>();
+                            tempSkillMenu.battleMenu = this;
+                            tempSkillMenu.isDescription = false;
                             break;
                         case 3:
                             itemMenuHolder = Instantiate(itemMenu);

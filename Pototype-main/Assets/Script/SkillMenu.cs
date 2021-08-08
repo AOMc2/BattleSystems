@@ -14,7 +14,6 @@ public class SkillMenu : MonoBehaviour
     private List<Skill> skills;
     private Character characterStats;
 
-
     private void Start()
     {
         sr = GetComponent<SpriteRenderer>();

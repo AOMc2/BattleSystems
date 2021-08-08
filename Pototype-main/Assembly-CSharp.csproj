@@ -61,13 +61,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\BattleMenu.cs" />
+    <Compile Include="Assets\Script\ButtonInfo.cs" />
     <Compile Include="Assets\Script\Character.cs" />
+    <Compile Include="Assets\Script\CrossSceneManagement.cs" />
     <Compile Include="Assets\Script\Database.cs" />
     <Compile Include="Assets\Script\ElementEffect.cs" />
     <Compile Include="Assets\Script\Item.cs" />
     <Compile Include="Assets\Script\ItemMenu.cs" />
     <Compile Include="Assets\Script\MoveForeground.cs" />
+    <Compile Include="Assets\Script\Point.cs" />
+    <Compile Include="Assets\Script\PointHolder.cs" />
     <Compile Include="Assets\Script\SceneCharacter.cs" />
+    <Compile Include="Assets\Script\ShopManagerScript.cs" />
     <Compile Include="Assets\Script\Skill.cs" />
     <Compile Include="Assets\Script\SkillMenu.cs" />
     <Compile Include="Assets\Script\StatsEffect.cs" />

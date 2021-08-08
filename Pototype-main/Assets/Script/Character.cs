@@ -18,6 +18,7 @@ public class Character : MonoBehaviour
 
     public Character(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Element element, int ID, int wave)
     {
+
         this.maxHP = maxHP;
         currentHP = maxHP;
         this.maxMP = maxMP;
@@ -46,9 +47,9 @@ public class Character : MonoBehaviour
         this.wave = wave;
     }
 
-    public void AddSkill(Skill skill)
+    public void AddSkill(Element element, int MPCost, string skillName = "null")
     {
-        skills.Add(skill);
+        skills.Add(new Skill(element, MPCost, skillName));
     }
 
     public void AddEffect(int round, Element element)
@@ -65,4 +66,5 @@ public class Character : MonoBehaviour
     {
         statsEffects.Add(new StatsEffect(round, this, extraDefense, extraDodgeRate, extraSpeed, extraAttackDamage));
     }
+
 }

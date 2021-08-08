@@ -40,15 +40,15 @@ public class ItemMenu : MonoBehaviour
             if (descriptionID  + itemMenu.scroller < battleMenu.database.inventory.Count)
             {
                 sr.sprite = itemSprites[battleMenu.database.inventory[descriptionID + itemMenu.scroller].ID];
+                itemAmountHolder = Instantiate(itemAmountPrefab, transform.position, Quaternion.identity).GetComponent<TMPro.TextMeshProUGUI>();
+                itemAmountHolder.transform.SetParent(GameObject.Find("Canvas").transform);
+                itemAmountHolder.text = "x" + battleMenu.database.inventory[itemMenu.scroller + descriptionID].itemAmount;
+                itemAmountHolder.transform.position += new Vector3(3.25f, 1.25f + descriptionID * -1.55f, 0);
             }
             else
             {
                 Destroy(gameObject);
             }
-            itemAmountHolder = Instantiate(itemAmountPrefab, transform.position, Quaternion.identity).GetComponent<TMPro.TextMeshProUGUI>();
-            itemAmountHolder.transform.SetParent(GameObject.Find("Canvas").transform);
-            itemAmountHolder.text = "x" + battleMenu.database.inventory[itemMenu.scroller + descriptionID].itemAmount;
-            itemAmountHolder.transform.position += new Vector3(3.25f, 1.25f + descriptionID * -1.55f, 0);
             if (descriptionID == 0)
             {
                 transform.position = (Vector2)transform.position + new Vector2(0, 0.75f);
@@ -83,8 +83,10 @@ public class ItemMenu : MonoBehaviour
             {
                 battleMenu.instructionHolder.text = "[W], [Up] and [S], [Down] to scroll, [Z] to comfirm";
                 battleMenu.isSelectedOption = false;
-                Destroy(description1.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
-                Destroy(description2.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
+                if (description1 != null)
+                    Destroy(description1.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
+                if (description2 != null)
+                    Destroy(description2.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
                 Destroy(gameObject);
             }
             if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
