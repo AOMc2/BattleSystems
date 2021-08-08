@@ -5,11 +5,13 @@ using UnityEngine;
 public class SkillMenu : MonoBehaviour
 {
     public bool isDescription;
+    // Index 10 - 12 are skill menu, up arrow, and down arraow
     public Sprite[] skillSprites;
     private SpriteRenderer sr;
     public BattleMenu battleMenu;
+    public bool isArrow;
     public int scroller = 0, descriptionID;
-    public GameObject description1, description2;
+    public GameObject description1, description2, arraowHolder;
     private SkillMenu skillMenu;
     private List<Skill> skills;
     private Character characterStats;
@@ -18,7 +20,7 @@ public class SkillMenu : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         skills = battleMenu.database.allyDetails[battleMenu.database.selector].GetComponent<Character>().skills;
-        if (isDescription == false)
+        if (isDescription == false && isArrow == false)
         {
             sr.sortingLayerName = "menu";
             battleMenu.instructionHolder.text = "[W], [Up] and [S], [Down] to scroll, [Z] to comfirm, [X] to cancel";
@@ -32,6 +34,16 @@ public class SkillMenu : MonoBehaviour
             description2.GetComponent<SkillMenu>().descriptionID = 1;
             description2.name = "Page2";
 
+            arraowHolder = Instantiate(gameObject, transform.position, Quaternion.identity);
+            arraowHolder.GetComponent<SkillMenu>().isArrow = true;
+            arraowHolder.GetComponent<SkillMenu>().descriptionID = 2;
+            arraowHolder.name = "UpArrow";
+
+            arraowHolder = Instantiate(gameObject, transform.position, Quaternion.identity);
+            arraowHolder.GetComponent<SkillMenu>().isArrow = true;
+            arraowHolder.GetComponent<SkillMenu>().descriptionID = 3;
+            arraowHolder.name = "DownArrow";
+
             sr.sprite = skillSprites[10];
             characterStats = battleMenu.database.allyDetails[battleMenu.database.selector].GetComponent<Character>();
         }
@@ -40,25 +52,40 @@ public class SkillMenu : MonoBehaviour
             sr.sortingLayerName = "description";
             transform.SetParent(GameObject.Find("SkillMenu(Clone)").transform);
             skillMenu = transform.parent.GetComponent<SkillMenu>();
-            if (descriptionID + skillMenu.scroller < skills.Count)
+            if (isArrow == false)
             {
-                sr.sprite = skillSprites[skills[skillMenu.scroller].ID + descriptionID];
+                if (descriptionID + skillMenu.scroller < skills.Count)
+                {
+                    sr.sprite = skillSprites[skills[skillMenu.scroller].ID + descriptionID];
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+
+                if (descriptionID == 0)
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(0, 0.75f);
+                }
+                else
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(0, -0.75f);
+                    sr.color = new Color32(170, 70, 200, 255);
+                }
             }
             else
             {
-                Destroy(gameObject);
+                if (descriptionID == 2)
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(3.5f, 2);
+                    sr.sprite = skillSprites[11];
+                }
+                else
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(3.5f, -2);
+                    sr.sprite = skillSprites[12];
+                }
             }
-
-            if (descriptionID == 0)
-            {
-                transform.position = (Vector2)transform.position + new Vector2(0, 0.75f);
-            }
-            else
-            {
-                transform.position = (Vector2)transform.position + new Vector2(0, -0.75f);
-                sr.color = new Color32(170, 70, 200, 255);
-            }
-
         }
     }
 
@@ -74,6 +101,33 @@ public class SkillMenu : MonoBehaviour
             else
             {
                 sr.sprite = skillSprites[skills[temp].ID];
+            }
+        }
+        else if (isArrow == true)
+        {
+            {
+                if (descriptionID == 2)
+                {
+                    if (skillMenu.scroller > 0)
+                    {
+                        sr.sprite = skillSprites[11];
+                    }
+                    else
+                    {
+                        sr.sprite = null;
+                    }
+                }
+                else
+                {
+                    if (skillMenu.scroller + 1 < skills.Count)
+                    {
+                        sr.sprite = skillSprites[12];
+                    }
+                    else
+                    {
+                        sr.sprite = null;
+                    }
+                }
             }
         }
         else

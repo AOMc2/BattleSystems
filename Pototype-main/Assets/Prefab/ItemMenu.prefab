@@ -69,12 +69,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c53fee83feb600440bddd1c9799c9e44, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d02db4f286801c348a93241d78a03ad5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 7.765625, y: 3.53125}
+  m_Size: {x: 7.765625, y: 3.65625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -104,8 +104,11 @@ MonoBehaviour:
   isDescription: 0
   description1: {fileID: 0}
   description2: {fileID: 0}
+  arrowHolder: {fileID: 0}
   itemAmountPrefab: {fileID: 4389706109078260770, guid: a0678011840f09c4a936877a3475b0ce,
     type: 3}
+  upArrow: {fileID: 21300002, guid: d02db4f286801c348a93241d78a03ad5, type: 3}
+  downArrow: {fileID: 21300004, guid: d02db4f286801c348a93241d78a03ad5, type: 3}
   itemAmountHolder: {fileID: 0}
   descriptionID: 0
   scroller: 0

@@ -8,16 +8,18 @@ public class ItemMenu : MonoBehaviour
     public BattleMenu battleMenu;
     public ItemMenu itemMenu;
     public Sprite[] itemSprites;
-    public bool isDescription;
-    public GameObject description1, description2, itemAmountPrefab;
-    public TMPro.TextMeshProUGUI itemAmountHolder;
+    public bool isDescription, isArrow;
+    [HideInInspector]public GameObject description1, description2, arrowHolder;
+    public GameObject itemAmountPrefab;
+    public Sprite upArrow, downArrow;
+    [HideInInspector]public TMPro.TextMeshProUGUI itemAmountHolder;
     public int descriptionID, scroller = 0;
 
     private void Start()
     {
         transform.SetParent(battleMenu.transform);
         sr = GetComponent<SpriteRenderer>();
-        if (isDescription == false)
+        if (isDescription == false && isArrow == false)
         {
             sr.sortingLayerName = "menu";
             battleMenu.instructionHolder.text = "[W], [Up] and [S], [Down] to scroll, [Z] to comfirm, [X] to cancel";
@@ -30,6 +32,16 @@ public class ItemMenu : MonoBehaviour
             description2.GetComponent<ItemMenu>().isDescription = true;
             description2.GetComponent<ItemMenu>().descriptionID = 1;
             description2.name = "Page2";
+
+            arrowHolder = Instantiate(gameObject, transform.position, Quaternion.identity);
+            arrowHolder.GetComponent<ItemMenu>().isArrow = true;
+            arrowHolder.GetComponent<ItemMenu>().descriptionID = 2;
+            arrowHolder.name = "Up";
+
+            arrowHolder = Instantiate(gameObject, transform.position, Quaternion.identity);
+            arrowHolder.GetComponent<ItemMenu>().isArrow = true;
+            arrowHolder.GetComponent<ItemMenu>().descriptionID = 3;
+            arrowHolder.name = "Down";
         }
         else
         {
@@ -37,26 +49,42 @@ public class ItemMenu : MonoBehaviour
             transform.SetParent(GameObject.Find("ItemMenu(Clone)").transform);
             itemMenu = transform.parent.GetComponent<ItemMenu>();
 
-            if (descriptionID  + itemMenu.scroller < battleMenu.database.inventory.Count)
+            if (isArrow == false)
             {
-                sr.sprite = itemSprites[battleMenu.database.inventory[descriptionID + itemMenu.scroller].ID];
-                itemAmountHolder = Instantiate(itemAmountPrefab, transform.position, Quaternion.identity).GetComponent<TMPro.TextMeshProUGUI>();
-                itemAmountHolder.transform.SetParent(GameObject.Find("Canvas").transform);
-                itemAmountHolder.text = "x" + battleMenu.database.inventory[itemMenu.scroller + descriptionID].itemAmount;
-                itemAmountHolder.transform.position += new Vector3(3.25f, 1.25f + descriptionID * -1.55f, 0);
+                if (descriptionID + itemMenu.scroller < battleMenu.database.inventory.Count)
+                {
+                    sr.sprite = itemSprites[battleMenu.database.inventory[descriptionID + itemMenu.scroller].ID];
+                    itemAmountHolder = Instantiate(itemAmountPrefab, transform.position, Quaternion.identity).GetComponent<TMPro.TextMeshProUGUI>();
+                    itemAmountHolder.transform.SetParent(GameObject.Find("Canvas").transform);
+                    itemAmountHolder.text = "x" + battleMenu.database.inventory[itemMenu.scroller + descriptionID].itemAmount;
+                    itemAmountHolder.transform.position += new Vector3(3.25f, 1.25f + descriptionID * -1.55f, 0);
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+                if (descriptionID == 0)
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(0, 0.75f);
+                }
+                else
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(0, -0.75f);
+                    sr.color = new Color32(170, 70, 200, 255);
+                }
             }
             else
             {
-                Destroy(gameObject);
-            }
-            if (descriptionID == 0)
-            {
-                transform.position = (Vector2)transform.position + new Vector2(0, 0.75f);
-            }
-            else
-            {
-                transform.position = (Vector2)transform.position + new Vector2(0, -0.75f);
-                sr.color = new Color32(170, 70, 200, 255);
+                if (descriptionID == 2)
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(3.5f, 2);
+                    sr.sprite = upArrow;
+                }
+                else
+                {
+                    transform.position = (Vector2)transform.position + new Vector2(3.5f, -2);
+                    sr.sprite = downArrow;
+                }
             }
         }
     }
@@ -75,6 +103,31 @@ public class ItemMenu : MonoBehaviour
             {
                 sr.sprite = itemSprites[battleMenu.database.inventory[temp].ID];
                 itemAmountHolder.text = "x" + battleMenu.database.inventory[temp].itemAmount;
+            }
+        }
+        else if (isArrow == true)
+        {
+            if (descriptionID == 2)
+            {
+                if (itemMenu.scroller > 0)
+                {
+                    sr.sprite = upArrow;
+                }
+                else
+                {
+                    sr.sprite = null;
+                }
+            }
+            else
+            {
+                if (itemMenu.scroller + 1 < battleMenu.database.inventory.Count)
+                {
+                    sr.sprite = downArrow;
+                }
+                else
+                {
+                    sr.sprite = null;
+                }
             }
         }
         else
