@@ -160,8 +160,10 @@ public class ItemMenu : MonoBehaviour
             {
                 battleMenu.currentItem = scroller;
                 battleMenu.isSelectedItem = true;
-                Destroy(description1.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
-                Destroy(description2.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
+                if (description1 != null)
+                    Destroy(description1.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
+                if (description2 != null)
+                    Destroy(description2.GetComponent<ItemMenu>().itemAmountHolder.gameObject);
                 Destroy(gameObject);
             }
         }

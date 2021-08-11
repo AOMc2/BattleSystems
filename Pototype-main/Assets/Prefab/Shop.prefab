@@ -701,7 +701,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000009520352, y: -0.000001535615}
+  m_AnchoredPosition: {x: -0.000009520352, y: 0.000028972521}
   m_SizeDelta: {x: 0, y: 444.14746}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7694504722559328327
@@ -875,6 +875,8 @@ MonoBehaviour:
   selectionPrefab: {fileID: 4393931694860499547, guid: 601f0d16131ee5a4ebe8bb17369cdd16,
     type: 3}
   selectionHolder: {fileID: 0}
+  database: {fileID: 0}
+  CSM: {fileID: 0}
 --- !u!1 &7694504722718616815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1018,8 +1020,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemID: 1
   PriceTxt: {fileID: 7694504723155131050}
+  SkillID: 0
   QuantityTxt: {fileID: 7694504723274537737}
   Itemdis: {fileID: 0}
+  Skilldis: {fileID: 0}
   ShopManager: {fileID: 7694504722675047769}
 --- !u!1 &7694504722766758104
 GameObject:
@@ -1164,8 +1168,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemID: 4
   PriceTxt: {fileID: 7694504722336972594}
+  SkillID: 0
   QuantityTxt: {fileID: 7694504722185262256}
   Itemdis: {fileID: 0}
+  Skilldis: {fileID: 0}
   ShopManager: {fileID: 7694504722675047769}
 --- !u!1 &7694504722824379105
 GameObject:
@@ -1464,8 +1470,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemID: 3
   PriceTxt: {fileID: 7694504723500920009}
+  SkillID: 0
   QuantityTxt: {fileID: 7694504722913021780}
   Itemdis: {fileID: 0}
+  Skilldis: {fileID: 0}
   ShopManager: {fileID: 7694504722675047769}
 --- !u!1 &7694504722913021778
 GameObject:
@@ -1925,7 +1933,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7694504721976137491}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2150,8 +2158,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemID: 2
   PriceTxt: {fileID: 7694504722836607975}
+  SkillID: 0
   QuantityTxt: {fileID: 7694504722980431048}
   Itemdis: {fileID: 0}
+  Skilldis: {fileID: 0}
   ShopManager: {fileID: 7694504722675047769}
 --- !u!1 &7694504723447658882
 GameObject:
@@ -2736,7 +2746,7 @@ GameObject:
   - component: {fileID: 7694504724013600492}
   - component: {fileID: 7694504724013600493}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: Shop
   m_TagString: Event
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3167,6 +3177,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemID: 5
   PriceTxt: {fileID: 7694504724045049657}
+  SkillID: 0
   QuantityTxt: {fileID: 7694504723841849667}
   Itemdis: {fileID: 0}
+  Skilldis: {fileID: 0}
   ShopManager: {fileID: 7694504722675047769}

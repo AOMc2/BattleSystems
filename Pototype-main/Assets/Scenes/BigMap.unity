@@ -603,6 +603,7 @@ MonoBehaviour:
   m: {fileID: 3419583415836373473, guid: c0212e24112b4044aae85e8ca4d70ba5, type: 3}
   characterSprites:
   - {fileID: 7146561053583597744, guid: e269368df50279246ab6d82705bc6e0b, type: 3}
+  - {fileID: 7146561053583597744, guid: e269368df50279246ab6d82705bc6e0b, type: 3}
   allyDetails: []
   enemyDetails: []
   waitingEnemies: []

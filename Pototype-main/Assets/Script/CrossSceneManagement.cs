@@ -57,7 +57,7 @@ public class CrossSceneManagement : MonoBehaviour
         switch (sceneName)
         {
             case "BigMap":
-                //database.gameObject.SetActive(false);
+                database.gameObject.SetActive(false);
                 pointHolder.gameObject.SetActive(true);
                 if (previousSceneName == "BattleScene")
                 {

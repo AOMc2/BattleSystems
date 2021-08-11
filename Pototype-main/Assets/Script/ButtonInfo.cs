@@ -7,8 +7,10 @@ public class ButtonInfo : MonoBehaviour
 {
     public int ItemID;
     public Text PriceTxt;
+    public int SkillID;
     public Text QuantityTxt;
     public Text Itemdis;
+    public Text Skilldis;
     public GameObject ShopManager;
     private ShopManagerScript SMS;
 

@@ -78,7 +78,7 @@ public class SceneCharacter : MonoBehaviour
                     if (progress <= 0)
                     {
                         transform.position = new Vector2(-8, 4);
-                        progress += 0.1f;
+                        progress += 0.5f;
                     }
                     else if (progress >= speedBarLength)
                     {
@@ -104,7 +104,7 @@ public class SceneCharacter : MonoBehaviour
                             }
                             else
                             {
-                                progress += 1 * Time.deltaTime;
+                                progress += 2 * Time.deltaTime;
                             }
                             transform.position = new Vector2(-8 + progress, 4);
                     }
@@ -152,7 +152,6 @@ public class SceneCharacter : MonoBehaviour
                     else
                     {
                         database.enemyDetails.Remove(characterStats.gameObject);
-                        database.enemyDetails.Add(characterStats.gameObject);
                         characterStats.isDead = true;
                         myRenderer.material.shader = shaderGUIText;
                         myRenderer.color = Color.grey;
@@ -187,10 +186,13 @@ public class SceneCharacter : MonoBehaviour
                                 database.allyDetails[i].GetComponent<Character>().sceneCharacter.barCharacter.progress = 0;
                             }
                             database.enemyDetails.Clear();
-                            Destroy(HPIndicatorHolder.gameObject);
-                            Destroy(characterStats.sceneCharacter.gameObject);
                             if (database.currentWave + 1 == database.totalWave)
                             {
+                                for (int i = 0; i < database.allyDetails.Count; i++)
+                                {
+                                    database.allyDetails[i].GetComponent<Character>().statsEffects.Clear();
+                                    database.allyDetails[i].GetComponent<Character>().effects.Clear();
+                                }
                                 database.currentWave = 0;
                                 database.waitingEnemies.Clear();
                                 database.transform.parent.GetComponent<CrossSceneManagement>().LoadScene("BigMap");
@@ -200,6 +202,9 @@ public class SceneCharacter : MonoBehaviour
                                 database.moveMap.StartLerping();
                             }
                         }
+                        Destroy(HPIndicatorHolder.gameObject);
+                        Destroy(characterStats.sceneCharacter.gameObject);
+                        Destroy(characterStats.gameObject);
                     }
 
                 }
@@ -241,6 +246,8 @@ public class SceneCharacter : MonoBehaviour
         {
             myRenderer.material.shader = shaderSpriteDefault;
             myRenderer.color = Color.white;
+            barCharacter.myRenderer.material.shader = shaderSpriteDefault;
+            barCharacter.myRenderer.color = Color.white;
         }
     }
 
@@ -258,26 +265,6 @@ public class SceneCharacter : MonoBehaviour
             characterStats.statsEffects[i].FinsihOneRound();
         }
         progress = 0;
-    }
-
-    // For Enemy Only
-    private int getAttackID(int ID, int repeatRate)
-    {
-        int maxSkillPattern = 0;
-        switch (ID)
-        {
-            case 0:
-                maxSkillPattern = 1;
-                break;
-            default:
-                maxSkillPattern = -1;
-                break;
-        }
-        if (maxSkillPattern == -1)
-        {
-            return -1;
-        }
-        return repeatRate % maxSkillPattern;
     }
 
     private Character getTarget(int index, bool isAlly)
@@ -304,6 +291,27 @@ public class SceneCharacter : MonoBehaviour
         }
         return current + addValue;
     }
+
+    // For Enemy Only, Start From ID 0
+    private int getAttackID(int ID, int repeatRate)
+    {
+        int maxSkillPattern = 0;
+        switch (ID)
+        {
+            case 1:     //boss 1
+                maxSkillPattern = 3;
+                break;
+            default:
+                maxSkillPattern = -1;
+                break;
+        }
+        if (maxSkillPattern == -1)
+        {
+            return -1;
+        }
+        return repeatRate % maxSkillPattern;
+    }
+
     // For Enemy Only, AttackID Sets To -1 = Basic Attack
     private void performAttackPattern(int ID, int attackID, int index, bool isAlly)
     {
@@ -331,11 +339,24 @@ public class SceneCharacter : MonoBehaviour
             {
                 switch (ID)
                 {
-                    case 0:
-                        if (attackID == 0)
-                        {
-                            target.currentHP -= finalDamage;
-                        }
+                    case 1: // boss 1
+                            if (attackID == 0)
+                            {
+                                target.currentHP -= finalDamage;
+                            }
+                            if (attackID == 1)
+                            {
+                                for (int i = 0; i < database.allyDetails.Count; i++)
+                                {
+                                    target = getTarget(i, isAlly);
+                                    target.currentHP -= finalDamage;
+                                }
+                            }
+                            if (attackID == 2)
+                            {
+                                database.CreateEnemy(75, 0, 5, 0, 5, 10, Character.Element.water, 1);
+                                characterStats.currentHP += 7;
+                            }
                         break;
                 }
             }
@@ -437,6 +458,7 @@ public class SceneCharacter : MonoBehaviour
                         break;
                     case 4:
                         target.isDead = false;
+                        target.currentHP = 0;
                         target.currentHP = getOverThread(target.currentHP, 50, target.maxHP);
                         target.sceneCharacter.isHit();
                         break;

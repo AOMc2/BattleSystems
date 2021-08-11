@@ -51,6 +51,19 @@ public class Database : MonoBehaviour
         }
     }
 
+    public void CreateEnemy(int maxHP, int maxMP, int defense, int dodgeRate, int speed, int attackDamage, Character.Element element, int ID)
+    {
+        AddCharacterToEnemyList(new Character( maxHP,  maxMP,  defense, dodgeRate, speed, attackDamage, element, ID, currentWave));
+
+        GameObject cloner = Instantiate(s, new Vector2(2 + (enemyDetails.Count - 1) * 2, -2), Quaternion.identity);
+        SceneCharacter temp = cloner.GetComponent<SceneCharacter>();
+        temp.characterStats = enemyDetails[enemyDetails.Count - 1].GetComponent<Character>();
+        temp.database = this;
+        temp.isBarCharacter = false;
+        enemyDetails[enemyDetails.Count - 1].GetComponent<Character>().sceneCharacter = temp;
+        cloner.tag = "Enemy";
+    }
+
     public void CreateEnemy()
     {
         int t = 0;
@@ -133,8 +146,8 @@ public class Database : MonoBehaviour
 
     public void SetUp()
     {
-        AddCharacterToAllyList(50, 100, 20, 5, 20, 15, Character.Element.wildfire, 0);
-        AddCharacterToAllyList(100, 100, 10, 5, 8, 15, Character.Element.water, 0);
+        AddCharacterToAllyList(50, 100, 10, 5, 15, 15, Character.Element.wildfire, 0);
+        AddCharacterToAllyList(100, 100, 10, 5, 4, 15, Character.Element.water, 0);
         AddCharacterToAllyList(100, 100, 10, 5, 4, 15, Character.Element.earth, 0);
 
         allyDetails[0].GetComponent<Character>().AddSkill(Character.Element.wind, 10, "Dodge");
@@ -166,12 +179,13 @@ public class Database : MonoBehaviour
                 AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
                 break;
             case 2:
+                Debug.Log("Boss Level");
                 totalWave = 1;
                 CreateMap(2);
-                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);
-                AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
+                AddEnemyDetailsToWaitingEnemies(270, 100, 10, 6, 12, 30, Character.Element.water, 1, 0);
+                //AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 7, 15, Character.Element.earth, 0, 1);
                 break;
-            case 3:
+            case 4:
                 totalWave = 2;
                 CreateMap(3);
                 AddEnemyDetailsToWaitingEnemies(1, 100, 10, 5, 5, 15, Character.Element.fire, 0, 0);

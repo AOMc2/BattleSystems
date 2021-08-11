@@ -182,8 +182,8 @@ public class PointHolder : MonoBehaviour
                 if (currentPoint != 18)
                 {
                     tempCrossSceneManager.LoadScene("BattleScene");
-                    tempCrossSceneManager.database.level = avaliableLevel.IndexOf(currentPoint);
-                    tempCrossSceneManager.previousBattleSceneLevel = avaliableLevel.IndexOf(currentPoint);
+                    tempCrossSceneManager.database.level = currentPoint;
+                    tempCrossSceneManager.previousBattleSceneLevel = currentPoint;
                 }
                 else
                 {
