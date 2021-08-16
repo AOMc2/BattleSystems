@@ -17,6 +17,7 @@ public class SkillMenu : MonoBehaviour
     private void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        skillSprites = battleMenu.database.skillSprites;
         if (isDescription == false && isArrow == false)
         {
             skills = battleMenu.database.allyDetails[battleMenu.database.selector].GetComponent<Character>().skills;
@@ -80,12 +81,13 @@ public class SkillMenu : MonoBehaviour
                 if (descriptionID == 2)
                 {
                     transform.position = (Vector2)transform.position + new Vector2(3.5f, 2);
-                    sr.sprite = upArrowImage;
+                    sr.sprite = null;
                 }
                 else
                 {
                     transform.position = (Vector2)transform.position + new Vector2(3.5f, -2);
-                    sr.sprite = downArrowImage;
+                    sr.sprite = null;
+                    skillMenu.ChangeVisual();
                 }
                 enabled = false;
             }

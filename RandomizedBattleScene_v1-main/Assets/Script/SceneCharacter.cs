@@ -213,8 +213,14 @@ public class SceneCharacter : MonoBehaviour
                                 database.logMessage.AddMessage("Current Gold: " + database.coin + " G + " + database.coinGainInOneRound + " G => " + (database.coin + database.coinGainInOneRound) + " G");
                                 database.coin = database.coin + database.coinGainInOneRound;
 
-                                database.logMessage.Print(LogMessage.closeStatus.backToBigMap);
-
+                                if (Random.Range(1, 6) == 1)
+                                {
+                                    database.logMessage.Print(LogMessage.closeStatus.backToShop);
+                                }
+                                else
+                                {
+                                    database.logMessage.Print(LogMessage.closeStatus.backToBigMap);
+                                }
                             }
                             else
                             {
@@ -308,32 +314,14 @@ public class SceneCharacter : MonoBehaviour
         repeatRate++;
         sceneCharacter.animator.SetBool("isAttack", false);
         animator.SetBool("isAttack", false);
+
         database.isHandling = false;
+
         for (int i = 0; i < characterStats.statsEffects.Count; i++)
         {
             characterStats.statsEffects[i].FinsihOneRound();
         }
         progress = 0;
-    }
-
-    // For Enemy Only
-    private int getAttackID(int ID, int repeatRate)
-    {
-        int maxSkillPattern = 0;
-        switch (ID)
-        {
-            case 0:
-                maxSkillPattern = 1;
-                break;
-            default:
-                maxSkillPattern = -1;
-                break;
-        }
-        if (maxSkillPattern == -1)
-        {
-            return -1;
-        }
-        return repeatRate % maxSkillPattern;
     }
 
     private Character getTarget(int index, bool isAlly)
@@ -359,6 +347,26 @@ public class SceneCharacter : MonoBehaviour
             return 1;
         }
         return current + addValue;
+    }
+
+    // For Enemy Only
+    private int getAttackID(int ID, int repeatRate)
+    {
+        int maxSkillPattern = 0;
+        switch (ID)
+        {
+            case 6:
+                maxSkillPattern = 1;
+                break;
+            default:
+                maxSkillPattern = -1;
+                break;
+        }
+        if (maxSkillPattern == -1)
+        {
+            return -1;
+        }
+        return repeatRate % maxSkillPattern;
     }
 
     // For Enemy Only, AttackID Sets To -1 = Basic Attack
@@ -398,10 +406,10 @@ public class SceneCharacter : MonoBehaviour
             {
                 switch (ID)
                 {
-                    case 0:
+                    case 6:
                         if (attackID == 0)
                         {
-                            target.DealDamage(characterStats.attackDamage + characterStats.extraAttackDamage);
+                            database.isHandling = true;
                         }
                         break;
                 }

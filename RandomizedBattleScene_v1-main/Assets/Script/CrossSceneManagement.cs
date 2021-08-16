@@ -10,6 +10,7 @@ public class CrossSceneManagement : MonoBehaviour
     private static int total = 0;
     [SerializeField] private string previousSceneName;
     [HideInInspector]public int previousBattleSceneLevel;
+    [SerializeField]private bool forcedThrowDice = false;
 
     private void Awake()
     {
@@ -43,6 +44,7 @@ public class CrossSceneManagement : MonoBehaviour
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) // On Level Finished Loading Second
     {
+
         SetObjectActivation(scene.name);
     }
 
@@ -68,7 +70,7 @@ public class CrossSceneManagement : MonoBehaviour
                     }
                     else
                     {
-                        database.GetAllyNPC();
+                        forcedThrowDice = true;
                         pointHolder.ExpandLevel();
                     }
                 }
@@ -80,7 +82,34 @@ public class CrossSceneManagement : MonoBehaviour
                 break;
             case "Shop":
                 pointHolder.gameObject.SetActive(false);
+                if (previousSceneName == "BattleScene")
+                {
+                    if (database.allyDetails.Count == 0)
+                    {
+                        pointHolder.avaliableLevel.Clear();
+                        pointHolder.avaliableLevel.Add(0);
+                        pointHolder.beatedLevel.Clear();
+                    }
+                    else
+                    {
+                        pointHolder.ExpandLevel();
+                    }
+                }
                 break;
+        }
+
+        if (forcedThrowDice == true)
+        {
+            forcedThrowDice = false;
+            database.GetAllyNPC();
+        }
+
+        if (SceneManager.GetActiveScene().name == "Shop")
+        {
+            if (previousSceneName == "BattleScene")
+            {
+                forcedThrowDice = true;
+            }
         }
     }
 }

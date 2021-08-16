@@ -161,6 +161,7 @@ MonoBehaviour:
   pointHolder: {fileID: 0}
   previousSceneName: 
   previousBattleSceneLevel: 0
+  forcedThrowDice: 0
 --- !u!1 &13458308
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +289,6 @@ MonoBehaviour:
   - {x: 3.5, y: -1.8}
   - {x: 2.5, y: -2.5}
   - {x: 1.25, y: -1.7}
-  - {x: -5.3, y: 1.2}
   allPoints: []
   pointPrefab: {fileID: 4933257202871918198, guid: 0e565061528dbea4cba78318b4c6a4da,
     type: 3}
@@ -614,6 +614,7 @@ MonoBehaviour:
   - {fileID: 442128045062150719, guid: 2ed1893c7d17de945a7b99a9aa37929e, type: 3}
   - {fileID: 1257162368698552655, guid: a772eae59cb2f3a49b15740464ced418, type: 3}
   - {fileID: 6005577426787068978, guid: e24f495de0eea0c44a478cc09351d710, type: 3}
+  - {fileID: 6005577426787068978, guid: e24f495de0eea0c44a478cc09351d710, type: 3}
   allyDetails: []
   enemyDetails: []
   waitingEnemies: []
@@ -631,6 +632,23 @@ MonoBehaviour:
   moveMap: {fileID: 0}
   logMessage: {fileID: 0}
   diceHolder: {fileID: 0}
+  itemSprites:
+  - {fileID: 21300000, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
+  - {fileID: 21300002, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
+  - {fileID: 21300008, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
+  - {fileID: 21300004, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
+  - {fileID: 21300006, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
+  skillSprites:
+  - {fileID: 21300004, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300000, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300018, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300008, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300006, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300012, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300010, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300002, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300014, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
+  - {fileID: 21300016, guid: 42995e9e5e45bbd498c1ee0fae0699d9, type: 3}
 --- !u!4 &5233151616484375272
 Transform:
   m_ObjectHideFlags: 0

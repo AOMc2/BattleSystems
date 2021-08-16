@@ -5,16 +5,17 @@ using UnityEngine;
 public class Database : MonoBehaviour
 {
     public bool isHandling = true, isSelectedOption = false, isAllySelected = false;
-    public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0, currentWave = 0, mapLerpingNumber = 0, totalWave = 0, level = 0, coin = 0, coinGainInOneRound = 0;
+    [HideInInspector]public int selectedState = 0, selectedIndex = 0, selector = 0, selectedItem = 0, currentWave = 0, mapLerpingNumber = 0, totalWave = 0, level = 0, coin = 0, coinGainInOneRound = 0;
     public GameObject characterData, sceneCharacter, instruction, map, log, dice;
     public GameObject[] characterSprites;
-    public List<GameObject> allyDetails, enemyDetails;
-    public List<Character> waitingEnemies;
-    public List<Item> inventory;
+    [HideInInspector]public List<GameObject> allyDetails, enemyDetails;
+    [HideInInspector]public List<Character> waitingEnemies;
+    [HideInInspector]public List<Item> inventory;
     public Sprite[] backgroundMap, foregroundMap;
     [HideInInspector]public MoveForeground moveMap;
     [HideInInspector]public LogMessage logMessage;
     [HideInInspector] public Dice diceHolder;
+    public Sprite[] itemSprites, skillSprites;
 
     private BattleMenu battleMenu;
 
@@ -241,10 +242,6 @@ public class Database : MonoBehaviour
         {
             case 0:
                 return true;
-            case 1:
-                return false;
-            case 2:
-                return false;
             case 3:
                 return true;
             case 4:

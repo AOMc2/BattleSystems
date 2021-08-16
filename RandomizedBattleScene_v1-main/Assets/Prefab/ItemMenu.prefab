@@ -95,17 +95,13 @@ MonoBehaviour:
   sr: {fileID: 0}
   battleMenu: {fileID: 0}
   itemMenu: {fileID: 0}
-  itemSprites:
-  - {fileID: 21300000, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
-  - {fileID: 21300002, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
-  - {fileID: 21300004, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
-  - {fileID: 21300006, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
-  - {fileID: 21300008, guid: b1eac7f794d19864a937b6e34d2e38cb, type: 3}
-  isDescription: 0
-  isArrow: 0
+  upArrowHolder: {fileID: 0}
+  downArrowHolder: {fileID: 0}
   description1: {fileID: 0}
   description2: {fileID: 0}
-  arrowHolder: {fileID: 0}
+  itemSprites: []
+  isDescription: 0
+  isArrow: 0
   itemAmountPrefab: {fileID: 4389706109078260770, guid: a0678011840f09c4a936877a3475b0ce,
     type: 3}
   menuImage: {fileID: 21300000, guid: d02db4f286801c348a93241d78a03ad5, type: 3}

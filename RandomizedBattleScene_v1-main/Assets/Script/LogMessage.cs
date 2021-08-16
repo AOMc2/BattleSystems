@@ -10,7 +10,7 @@ public class LogMessage : MonoBehaviour
     public Sprite log1, log2;
     private SpriteRenderer sr;
     public bool isPrintintComplete = true, isHiding = true;
-    [HideInInspector]public enum closeStatus { backToBigMap, close};
+    [HideInInspector]public enum closeStatus { backToBigMap, close, backToShop};
     private closeStatus status;
     private Transform canvasTransform;
     private TMPro.TextMeshProUGUI instructionHolder;
@@ -113,14 +113,14 @@ public class LogMessage : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
+                Hide();
                 if (status == closeStatus.backToBigMap)
                 {
-                    Hide();
                     database.transform.parent.GetComponent<CrossSceneManagement>().LoadScene("BigMap");
                 }
-                else if (status == closeStatus.close)
+                else if (status == closeStatus.backToShop)
                 {
-                    Hide();
+                    database.transform.parent.GetComponent<CrossSceneManagement>().LoadScene("Shop");
                 }
             }
         }
@@ -163,8 +163,10 @@ public class LogMessage : MonoBehaviour
         sr.sprite = log2;
         database.isHandling = false;
         isPrintintComplete = true;
-
-        instructionHolder.text = "[Z] to close";
+        if (status == closeStatus.backToBigMap)
+            instructionHolder.text = "[Z] to close";
+        if (status == closeStatus.backToShop)
+            instructionHolder.text = "[Z] to enter shop";
         enabled = true;
     }
 }

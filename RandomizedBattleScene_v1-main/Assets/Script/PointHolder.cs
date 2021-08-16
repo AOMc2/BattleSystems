@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PointHolder : MonoBehaviour
 {
-    // 0 to 12 is the main path, 13 to 14 is the cage path, 15 to 17 is the tower path, 18 is the shop
+    // 0 to 12 is the main path, 13 to 14 is the cage path, 15 to 17 is the tower path
     public Vector2[] pointPositions;
     public List<Point> allPoints;
     public GameObject pointPrefab, characterIconPrefab;
-    private int[] mainLevel = { 0, 1, 2, 4, 6, 7, 10, 11, 12, 14, 17, 18};
+    private int[] mainLevel = { 0, 1, 2, 4, 6, 7, 10, 11, 12, 14, 17};
     // Add avaliable levels in the list below. Eg. 0, 1, 2, 4, 6, 7, 10, 11, 12, 14, 17
     public List<int> avaliableLevel, beatedLevel;
     private GameObject characterIconHolder;
@@ -63,7 +63,6 @@ public class PointHolder : MonoBehaviour
                     if (i == 1)
                     {
                         allPoints[i].connectingPoints[0] = allPoints[i - 1];
-                        allPoints[i].connectingPoints[1] = allPoints[18];
                     }
                     if (i == 4 || i == 5)
                     {
@@ -114,11 +113,6 @@ public class PointHolder : MonoBehaviour
                     allPoints[i].connectingPoints[0] = allPoints[i - 1];
                     allPoints[i].connectingPoints[3] = allPoints[i - 1];
                     break;
-                case 18:
-                    allPoints[i].connectingPoints[0] = allPoints[1];
-                    allPoints[i].connectingPoints[2] = allPoints[1];
-                    break;
-
             }
         }
     }
@@ -182,26 +176,19 @@ public class PointHolder : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    if (currentPoint != 18)
+                    if (CSM.database.allyDetails.Count > 0 && beatedLevel.Contains(currentPoint) == false)
                     {
-                        if (CSM.database.allyDetails.Count > 0 && beatedLevel.Contains(currentPoint) == false)
+                        CSM.LoadScene("BattleScene");
+                        int index = -1;
+                        for (int i = 0; i < mainLevel.Length; i++)
                         {
-                            CSM.LoadScene("BattleScene");
-                            int index = -1;
-                            for (int i = 0; i < mainLevel.Length; i++)
+                            if (mainLevel[i] == currentPoint)
                             {
-                                if (mainLevel[i] == currentPoint)
-                                {
-                                    index = i;
-                                }
+                                index = i;
                             }
-                            CSM.database.level = index;
-                            CSM.previousBattleSceneLevel = index;
                         }
-                    }
-                    else
-                    {
-                        CSM.LoadScene("Shop");
+                        CSM.database.level = index;
+                        CSM.previousBattleSceneLevel = index;
                     }
                 }
             }

@@ -6,7 +6,7 @@ public class ItemMenu : MonoBehaviour
 {
     [HideInInspector]public SpriteRenderer sr;
     [HideInInspector]public BattleMenu battleMenu;
-    [HideInInspector]public ItemMenu itemMenu, upArrowHolder, downArrowHolder, description1, description2;
+    public ItemMenu itemMenu, upArrowHolder, downArrowHolder, description1, description2;
     public Sprite[] itemSprites;
     [HideInInspector]public bool isDescription, isArrow;
     public GameObject itemAmountPrefab;
@@ -18,6 +18,7 @@ public class ItemMenu : MonoBehaviour
     {
         transform.SetParent(battleMenu.transform);
         sr = GetComponent<SpriteRenderer>();
+        itemSprites = battleMenu.database.itemSprites;
         if (isDescription == false && isArrow == false)
         {
             sr.sprite = menuImage;
@@ -81,12 +82,13 @@ public class ItemMenu : MonoBehaviour
                 if (descriptionID == 2)
                 {
                     transform.position = (Vector2)transform.position + new Vector2(3.5f, 2);
-                    sr.sprite = upArrow;
+                    sr.sprite = null;
                 }
                 else
                 {
                     transform.position = (Vector2)transform.position + new Vector2(3.5f, -2);
-                    sr.sprite = downArrow;
+                    sr.sprite = null;
+                    itemMenu.ChangeVisual();
                 }
                 enabled = false;
             }
@@ -113,7 +115,7 @@ public class ItemMenu : MonoBehaviour
             downArrowHolder.sr.sprite = null;
         }
 
-        if (description1 != null)
+        if (description1 != null && description1.itemAmountHolder != null)
         {
             if (scroller >= battleMenu.database.inventory.Count) // description 1
             {
@@ -127,7 +129,7 @@ public class ItemMenu : MonoBehaviour
             }
         }
 
-        if (description2 != null)
+        if (description2 != null && description2.itemAmountHolder != null)
         {
             if (scroller + 1 >= battleMenu.database.inventory.Count) // description 2
             {
