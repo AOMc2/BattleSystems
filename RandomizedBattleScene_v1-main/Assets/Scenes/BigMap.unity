@@ -614,7 +614,12 @@ MonoBehaviour:
   - {fileID: 442128045062150719, guid: 2ed1893c7d17de945a7b99a9aa37929e, type: 3}
   - {fileID: 1257162368698552655, guid: a772eae59cb2f3a49b15740464ced418, type: 3}
   - {fileID: 6005577426787068978, guid: e24f495de0eea0c44a478cc09351d710, type: 3}
-  - {fileID: 6005577426787068978, guid: e24f495de0eea0c44a478cc09351d710, type: 3}
+  - {fileID: 1221612186105020731, guid: a01f41b6433aa0346997db143520a836, type: 3}
+  - {fileID: 6518115231566094043, guid: 0466a6793e8aa1b48826e171e223dbef, type: 3}
+  - {fileID: 193623639760894054, guid: e4d388fe059c4ad4684b23754a436182, type: 3}
+  - {fileID: 1585740635859578065, guid: e7d859256dac0be4cb59d9cfda80f165, type: 3}
+  - {fileID: 4163583031230892614, guid: 9031e776d32b7cb49b46f65d832a06a1, type: 3}
+  - {fileID: 5113467567379682472, guid: a198f2db7fcd2af4b983205d4a739383, type: 3}
   allyDetails: []
   enemyDetails: []
   waitingEnemies: []

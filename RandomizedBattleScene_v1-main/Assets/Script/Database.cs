@@ -257,9 +257,33 @@ public class Database : MonoBehaviour
         switch (level)
         {
             case 0:
-                if (isFulfilledPossibility(2))
+                //if (isFulfilledPossibility(2))
+                //{
+                //    return 2;
+                //}
+                if (isFulfilledPossibility(6))
                 {
-                    return 2;
+                    return 6;
+                }
+                if (isFulfilledPossibility(7))
+                {
+                    return 7;
+                }
+                if (isFulfilledPossibility(8))
+                {
+                    return 8;
+                }
+                if (isFulfilledPossibility(9))
+                {
+                    return 9;
+                }
+                if (isFulfilledPossibility(10))
+                {
+                    return 10;
+                }
+                if (isFulfilledPossibility(11))
+                {
+                    return 11;
                 }
                 break;
         }
@@ -271,7 +295,7 @@ public class Database : MonoBehaviour
         switch (index)
         {
             case 0:
-                return new Character(100, 100, 100, 100, 100, 100, Character.Element.wildfire, index, 0);
+                return new Character(100, 100, 100, 100, 5, 10, Character.Element.wildfire, index, 0);
             case 1:
                 return new Character(1, 1, 1, 1, 1, 1, Character.Element.wildfire, index, 0);
             case 2:
@@ -282,6 +306,18 @@ public class Database : MonoBehaviour
                 return new Character(1, 1, 1, 1, 1, 1, Character.Element.wildfire, index, 0);
             case 5:
                 return new Character(1, 1, 1, 1, 1, 1, Character.Element.wildfire, index, 0);
+            case 6:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
+            case 7:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
+            case 8:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
+            case 9:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
+            case 10:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
+            case 11:
+                return new Character(1, 1, 1, 50, 10, 1, Character.Element.wildfire, index, 0);
         }
         return new Character(100, 100, 100, 100, 100, 100, Character.Element.wildfire, index, 0);
     }

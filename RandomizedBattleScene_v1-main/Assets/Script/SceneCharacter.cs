@@ -425,7 +425,11 @@ public class SceneCharacter : MonoBehaviour
         database.isSelectedOption = false;
         database.selector = database.allyDetails.IndexOf(characterStats.gameObject);
         battleMenu.Show();
+        sceneCharacter.animator.speed = 0;
+        sceneCharacter.animator.Play("c" + characterStats.ID.ToString() + "_attack", 0, 0);
         yield return new WaitUntil(() => database.isSelectedOption == true);
+        sceneCharacter.animator.Play("c" + characterStats.ID.ToString() + "_idle", 0, 0);
+        sceneCharacter.animator.speed = 1;
         database.isSelectedOption = false;
         Character target = getTarget(database.selectedIndex, database.isAllySelected);
         int finalDamage = 0;
